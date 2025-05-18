@@ -2,6 +2,8 @@ import matplotlib.pyplot as plt
 from matplotlib import animation
 from matplotlib.lines import Line2D
 from matplotlib.patches import Rectangle
+from platformdirs import user_state_dir
+
 from Constants import *
 import os
 
@@ -52,18 +54,19 @@ def plot_area(area, users, base_stations, agents, type_of_search, num_of_iter, p
         base_stations_x, base_stations_y = zip(*[base_station.get_2D_position() for base_station in base_stations])
         plt.scatter(base_stations_x, base_stations_y, color='blue', zorder=2)
 
-    trajectories = [agent.trajectory for agent in agents]
-    trajectories_histories = [user.trajectory_history for user in users]
-    lines = [ax.plot([], [], lw=0.7)[0] for _ in trajectories]
+    agents_trajectories = [agent.trajectory for agent in agents]
+    user_trajectories_histories = [user.trajectory_history for user in users]
+    agents_lines = [ax.plot([], [], lw=0.7)[0] for _ in agents_trajectories]
+    user_lines = [ax.plot([], [], lw=0.7, color='green')[0] for _ in user_trajectories_histories]
     # [0] allow to work directly with Line2D objects, not with list of lines
 
     def init():
-        for line in lines:
+        for line in agents_lines + user_lines:
             line.set_data([], [])
-        return lines
+        return agents_lines + user_lines
 
     def init_prob():
-        for line in lines:
+        for line in agents_lines + user_lines:
             line.set_data([], [])
 
         global patch_grid
@@ -85,45 +88,54 @@ def plot_area(area, users, base_stations, agents, type_of_search, num_of_iter, p
                 plt.text(1100, 1000-41*(i+1),f"prob. {round(i*0.05, 2)}", size='x-small', fontfamily='monospace')
             ax.add_patch(Rectangle((1050, 1000-41), 40, 40, facecolor="#ffffff", edgecolor='#ff8000', alpha=0.1, zorder=1, clip_on=False))
 
-        return lines
+        return agents_lines + user_lines
 
     def animate(i):
-        # this two ifs are used to clear the plot from the precedent frame (slicing avoid smudges in animation)
-        global user_scatter
+        global user_scatter, agent_scatter
+
+        # Clear previous user scatter points
         for scatter in user_scatter[:]:
             scatter.remove()
             user_scatter.remove(scatter)
 
-        global agent_scatter
+        # Clear previous agent scatter points
         for scatter in agent_scatter[:]:
             scatter.remove()
             agent_scatter.remove(scatter)
 
+        # Determine user colors and markers based on coverage history
         colors = ['green' if user.coverage_history[i] else 'red' for user in users]
         markers = ['^' if user.coverage_history[i] else '*' for user in users]
 
-        # draw users' markers
-        for user,trajectory_history, color2, marker in zip(users,trajectories_histories, colors, markers):
-            xu, yu = trajectory_history[i]   # made the same plotting as the agents
-            user_scatter.append(plt.scatter(xu, yu, color=color2, marker=marker, zorder=2))
+        # Draw user positions
+        for user, trajectory_history, color, marker in zip(users, user_trajectories_histories, colors, markers):
+            xu, yu = trajectory_history[i]
+            user_scatter.append(plt.scatter(xu, yu, color=color, marker=marker, zorder=2))
 
-        # draw users' trajectory
-        for agent, trajectory in zip(agents, trajectories):
+        # Draw agent positions
+        for agent, trajectory in zip(agents, agents_trajectories):
             xa, ya = trajectory[i]
             agent_scatter.append(plt.scatter(xa, ya, color='black', zorder=2))
 
-        # used for the final coverage image
+        # Save initial frame image (only if not using exploration)
         if i == 0 and not use_expl:
             plt.savefig(f'Simulations output/custom prob {use_custom_prob}/{num_of_iter}/initial coverage.png')
 
-        if i == len(trajectories[0]) - 1 and not use_expl:
-            for line, trajectory in zip(lines, trajectories):
+        # Draw final trajectory lines and save final frame
+        if i == len(agents_trajectories[0]) - 1 and not use_expl:
+            for line, trajectory in zip(agents_lines, agents_trajectories):
                 x_coord = [coord[0] for coord in trajectory[:i + 1]]
                 y_coord = [coord[1] for coord in trajectory[:i + 1]]
                 line.set_data(x_coord, y_coord)
+
+            for line, trajectory in zip(user_lines, user_trajectories_histories):
+                x_coord = [coord[0] for coord in trajectory[:i + 1]]
+                y_coord = [coord[1] for coord in trajectory[:i + 1]]
+                line.set_data(x_coord, y_coord)
+
             plt.savefig(f'Simulations output/custom prob {use_custom_prob}/{num_of_iter}/final coverage.png')
 
-        return lines
+        return agents_lines + user_lines
 
     def animate_prob(i):
 
@@ -139,26 +151,32 @@ def plot_area(area, users, base_stations, agents, type_of_search, num_of_iter, p
         if i == 0:
             plt.savefig(f'Simulations output/custom prob {use_custom_prob}/{num_of_iter}/initial coverage.png')
 
-        if i == len(trajectories[0]) -1:
-            for line, trajectory in zip(lines, trajectories):
+        if i == len(agents_trajectories[0]) -1:
+            for line, trajectory in zip(agents_lines, agents_trajectories):
                 x_coord = [coord[0] for coord in trajectory[:i + 1]]
                 y_coord = [coord[1] for coord in trajectory[:i + 1]]
                 line.set_data(x_coord, y_coord)
+
+            for line, trajectory in zip(user_lines, user_trajectories_histories):
+                x_coord = [coord[0] for coord in trajectory[:i + 1]]
+                y_coord = [coord[1] for coord in trajectory[:i + 1]]
+                line.set_data(x_coord, y_coord)
+
             plt.savefig(f'Simulations output/custom prob {use_custom_prob}/{num_of_iter}/final coverage.png')
 
         # USE FOR DEBUG
         #os.makedirs(os.path.dirname(f'Simulations output/{type_of_search} search/{expl_weight} weight/expl {use_expl}/BS {use_bs}/{num_of_iter}/animation frames/'), exist_ok=True)
         #plt.savefig(f'Simulations output/{type_of_search} search/{expl_weight} weight/expl {use_expl}/BS {use_bs}/{num_of_iter}/animation frames/frame_{i}.png')
 
-        return lines
+        return agents_lines + user_lines
 
-    ani = animation.FuncAnimation(fig, animate, init_func=init, frames=len(trajectories[0]), interval=200, blit=True)
+    ani = animation.FuncAnimation(fig, animate, init_func=init, frames=len(agents_trajectories[0]), interval=200, blit=True)
     os.makedirs(os.path.dirname(f'Simulations output/custom prob {use_custom_prob}/{num_of_iter}'), exist_ok=True)
     writer = FFMpegWriter(fps=20)
     ani.save(f'Simulations output/custom prob {use_custom_prob}/{num_of_iter}/animation.mp4', writer=writer)
 
     if use_expl:
-        ani_prob = animation.FuncAnimation(fig, animate_prob, init_func=init_prob, frames=len(trajectories[0]), interval=200, blit=True)
+        ani_prob = animation.FuncAnimation(fig, animate_prob, init_func=init_prob, frames=len(agents_trajectories[0]), interval=200, blit=True)
         writer_prob = FFMpegWriter(fps=20)
         ani_prob.save(f'Simulations output/custom prob {use_custom_prob}/{num_of_iter}/animation_prob.mp4',
                       writer=writer_prob)
