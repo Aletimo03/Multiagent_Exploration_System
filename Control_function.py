@@ -195,14 +195,14 @@ class Control_function:
 
         for sensor in self.agents + self.base_stations:
             for user in self.users:
-                prev_state = LoS_matrix[sensor][user]
+                prev_state = LoS_matrix[sensor.id][user.id]
 
                 if eval_LoS:
                     if prev_state == 'LoS':
-                        new_state = 'NLoS' if random.random() < 0.10 else 'LoS' # to update with movement of the couple
+                        new_state = 'NLoS' if random.random() < 0.05 else 'LoS' # to update with movement of the couple
                     else:
-                        new_state = 'LoS' if random.random() < 0.15 else 'NLoS'
-                    LoS_matrix[sensor][user]=new_state
+                        new_state = 'LoS' if random.random() < 0.25 else 'NLoS' # TO ADD TRANSITION COSTANTS/FUNCTIONS
+                    LoS_matrix[sensor.id][user.id]=new_state
                 else:
                     new_state = prev_state
 

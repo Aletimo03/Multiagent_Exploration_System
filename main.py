@@ -76,7 +76,7 @@ def experiment2():
 def experiment3():
     try:
         for i in range(NUM_OF_SIMULATIONS):
-            deserialize = True # instead of false for debug ( i want to check if output changes efffectively)
+            deserialize = False # try true for debug ( i want to check if output changes efffectively)
             for prob in [True]:  #add FALSE
                 print(f'----- Starting simulation [local-constant-custom prob {prob}] : {i} @ {date.now()}-----')
                 with open("logs/output_log.txt", 'a') as f:
