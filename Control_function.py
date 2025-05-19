@@ -185,15 +185,48 @@ class Control_function:
                                          other_sensor.transmitting_power )
         return interference_pow
 
+    def __LoS_matrix(self, eval_LoS=False):
+        """
+        Returns a matrix [sensor_id][user_id] with 'LoS' or 'NLoS' values.
+        If eval_LoS=True, updates the Markov state using transition probabilities.
+        """
+        LoS_matrix = [['LoS' for _ in range(len(self.users))] for _ in
+                      range(len(self.agents) + len(self.base_stations))]
+
+        for sensor in self.agents + self.base_stations:
+            for user in self.users:
+                prev_state = LoS_matrix[sensor][user]
+
+                if eval_LoS:
+                    if prev_state == 'LoS':
+                        new_state = 'NLoS' if random.random() < 0.10 else 'LoS' # to update with movement of the couple
+                    else:
+                        new_state = 'LoS' if random.random() < 0.15 else 'NLoS'
+                    LoS_matrix[sensor][user]=new_state
+                else:
+                    new_state = prev_state
+
+                LoS_matrix[sensor.id][user.id] = new_state
+
+        return LoS_matrix
+
     # returns a matrix that associate at each user the SINR of each agent
-    def __SINR(self, interference_powers, eval_all_users=False):
+    def __SINR(self, interference_powers, eval_all_users=False,eval_LoS=False):
         SINR_matrix = numpy.zeros((len(self.agents) + len(self.base_stations), len(self.users)))
+
+        LoS_matrix = self.__LoS_matrix(eval_LoS) if eval_LoS else None
 
         for sensor in self.agents + self.base_stations:
             for user in self.users:
                 if user.is_covered or eval_all_users:
-                    SINR_matrix[sensor.id][user.id] = (self.channel_gain(sensor, user) * sensor.transmitting_power) / (
+                     sinr = (self.channel_gain(sensor, user) * sensor.transmitting_power) / (
                             interference_powers[sensor.id][user.id] + PSDN * BANDWIDTH )
+
+                     if eval_LoS and LoS_matrix[sensor.id][user.id] == 'NLoS':
+                        sinr *= NLOS_SINR_GAIN #Penalty for nLoS situation
+
+                     SINR_matrix[sensor.id][user.id] = sinr
+
         return SINR_matrix
 
     # ==================================================================================================================
@@ -226,7 +259,7 @@ class Control_function:
             for sensor in self.agents + self.base_stations:
                 interference_powers[sensor.id][user.id] = self.__interference_power(sensor, user, self.agents)
 
-        SINR_matrix = self.__SINR(interference_powers, eval_all_users=True)
+        SINR_matrix = self.__SINR(interference_powers, eval_all_users=True,eval_LoS=True)   #add determinist SNIR and probabilistic for LoS implementation
         total_SINR_per_user = [max(col) for col in zip(*SINR_matrix)]
 
         RCR = 0
@@ -328,7 +361,7 @@ class Control_function:
             for user in self.users:
                 for sensor in other_agents + self.base_stations:
                     interference_powers_new_position[sensor.id][user.id] += ( agent.transmitting_power *
-                                                                            self.channel_gain(agent, user) )
+                                                                            self.channel_gain(agent, user) ) #mu COSTANT for LoS gain ( without markov chain)
 
             SINR_matrix = self.__SINR(interference_powers_new_position)
             new_coverage_level = self.__RCR(SINR_matrix)

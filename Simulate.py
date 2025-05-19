@@ -38,7 +38,7 @@ def simulate(type_of_search, expl_weight, num_of_iter, deserialize, use_expl, us
 
     # Simulate all user trajectories in advance
     user_trajectories = [
-        user.simulate_trajectory(steps=NUM_OF_ITERATIONS, area_width=area.width, area_length=area.length)
+        user.simulate_trajectory_ct(steps=NUM_OF_ITERATIONS, area_width=area.width, area_length=area.length)
         for user in users
     ]
     #
@@ -96,30 +96,6 @@ def simulate(type_of_search, expl_weight, num_of_iter, deserialize, use_expl, us
     while t < NUM_OF_ITERATIONS:
 
         # --- Handle user appearance/disappearance based on probability matrix and Pd/Pn ---
-
-      #  for user in users:
-       #     if user.is_covered and random.random() < 0.20 : # USER_DISCONNECTION_PROBABILITY
-       #         print(f"User {user.id} disconnected.")
-        #        users.remove(user)  # or mark as disconnected with a flag
-        #        continue
-
-        # Optional: try to "spawn" new users based on high-probability cells
-        # Step 2: Spawning new users
-       # num_new_users = 0
-        #for i in range(prob_matrix.shape[0]):
-          #  for j in range(prob_matrix.shape[1]):
-               # if prob_matrix[i][j] > SPAWN_THRESHOLD and random.random() < USER_APPEARANCE_PROBABILITY:
-                #    x = j * EXPLORATION_CELL_WIDTH + EXPLORATION_CELL_WIDTH / 2
-                #    y = i * EXPLORATION_CELL_HEIGTH + EXPLORATION_CELL_HEIGTH / 2
-                #    new_user = User(area, DESIRED_COVERAGE_LEVEL)
-                #    new_user.set_position(x, y)
-                #    users.append(new_user)
-                #    print(f"New user spawned at ({x}, {y})")
-                #    num_new_users += 1
-
-
-       # cf.update_users(users)
-
 
         # Move users along their predefined trajectories
         for idx, user in enumerate(users):

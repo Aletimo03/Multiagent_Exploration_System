@@ -47,26 +47,7 @@ class User:
         self.__x = x
         self.__y = y
 
-    def move(self, area_width, area_length):
-            # Sample velocity and angular velocity from normal distributions
-            v = max(0.0, random.gauss(USER_VELOCITY_MEAN, USER_VELOCITY_STD))
-            omega = random.gauss(0.0, USER_ANGULAR_VELOCITY_STD)
-
-            # Update orientation
-            self.theta = (self.theta + 0.9*omega) % (2 * math.pi)
-
-            # Calculate movement
-            dx = v * math.cos(self.theta)
-            dy = v * math.sin(self.theta)
-
-            # Apply bounds
-            new_x = min(max(self.__x + dx, 0), area_width)
-            new_y = min(max(self.__y + dy, 0), area_length)
-
-            self.__x = new_x
-            self.__y = new_y
-
-            self.trajectory_history.append((self.__x, self.__y))
+    #Removed move fucntion
 
     def simulate_trajectory(self, steps, area_width, area_length):
         """
@@ -90,6 +71,50 @@ class User:
             dy = v
 
             # Apply bounds
+            y = min(max(y + dy, 0), area_length)
+
+            trajectory.append((x, y))
+
+        return trajectory
+
+    def simulate_trajectory_ct(self, steps, area_width, area_length):
+        """
+        Simulates a trajectory using a simple COORDINATED TURN model.
+        The actual position of the user is NOT modified.
+
+        :param steps: Number of time steps to simulate
+        :param area_width: Width of the area (used to bound the simulated positions)
+        :param area_length: Length of the area (used to bound the simulated positions)
+        :return: List of (x, y) positions representing the simulated trajectory
+        """
+        x, y = self.__x, self.__y
+        theta = self.theta
+
+        # Initialize velocities
+        v = max(0.0, random.gauss(USER_VELOCITY_MEAN, USER_VELOCITY_STD))
+        omega = random.gauss(0.0, USER_ANGULAR_VELOCITY_STD)
+
+        trajectory = []
+
+        alpha = 0.9  # Smoothing factor for continuity
+
+        for _ in range(steps):
+            # Smooth update of velocity and angular velocity
+            new_v = max(0.0, random.gauss(USER_VELOCITY_MEAN, USER_VELOCITY_STD))
+            new_omega = random.gauss(0.0, USER_ANGULAR_VELOCITY_STD)
+
+            v = alpha * v + (1 - alpha) * new_v
+            omega = alpha * omega + (1 - alpha) * new_omega
+
+            # Update heading
+            theta = (theta + omega) % (2 * math.pi)
+
+            # Compute movement
+            dx = v * math.cos(theta)
+            dy = v * math.sin(theta)
+
+            # Update position with bounds
+            x = min(max(x + dx, 0), area_width)
             y = min(max(y + dy, 0), area_length)
 
             trajectory.append((x, y))

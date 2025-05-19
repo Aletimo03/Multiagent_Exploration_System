@@ -8,7 +8,7 @@ EPSILON = 0.1  # percentage of how the agent moves in the chosen direction
 COMMUNICATION_RADIUS = 200  # of the agent (default: 200)
 DESIRED_COVERAGE_LEVEL = 0.5  # by the user
 MAX_DISPLACEMENT = 10  # max distance an agent can move from its actual position
-NUM_OF_ITERATIONS = 20 # used 10 for easier debug  # max num of iterations before the algorithm stops (default: 100, test: 30)
+NUM_OF_ITERATIONS = 50  # max num of iterations before the algorithm stops (default: 100, test: 30)
 MIN_VERTICAL_DISTANCE = 0.15  # in meters
 SENSOR_HEIGHT = 0.15  # in meters
 AGENTS_COUPLING_PENALTY = 0.75
@@ -32,6 +32,11 @@ ALTITUDE = 50  # in meters
 """Transmit Power"""
 TRANSMITTING_POWER = 0.2  # in Watts
 
+
+"""SINR penalty multiplier for NLoS conditions"""
+NLOS_SINR_GAIN = 0.2
+
+
 # constants for exploration
 EXPLORATION_WEIGHT = 0.4  # weight of exploration in total cost-function (rho in th mathematical model)
 USER_DISCONNECTION_PROBABILITY = 0.008  # (Pd in the model)
@@ -45,10 +50,10 @@ COUPLING_DISTANCE = EXPLORATION_CELL_WIDTH * 3
 INIT_PROBABLITY = 0.5
 
 #User movement and spawn control
-USER_VELOCITY_MEAN = 1.5       # m/s — average human walking speed
-USER_VELOCITY_STD = 0.2        # m/s — variability in human walking
-USER_ANGULAR_VELOCITY_STD = 0.15  # rad/s — moderate turning speed
+# User movement and spawn control — realistic human-like walking model
+USER_VELOCITY_MEAN = 1.4             # m/s — avg. walking speed (slightly reduced for smoother turns)
+USER_VELOCITY_STD = 0.1              # m/s — reduced variability for more stable paths
+USER_ANGULAR_VELOCITY_STD = 0.05     # rad/step — mild angular changes for ~1–2 turns per 30 steps
 
-USER_SPAWN_THRESHOLD = 0.75
 
 
