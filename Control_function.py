@@ -220,7 +220,8 @@ class Control_function:
             for user in self.users:
                 if user.is_covered or eval_all_users:
                      sinr = (self.channel_gain(sensor, user) * sensor.transmitting_power) / (
-                            interference_powers[sensor.id][user.id] + PSDN * BANDWIDTH )
+                            interference_powers[sensor.id][user.id] + PSDN * BANDWIDTH ) * 0.95 #mu costant for LoS SNIR
+                                                                                            # SNIR probabilistic GAIN
 
                      if eval_LoS and LoS_matrix[sensor.id][user.id] == 'NLoS':
                         sinr *= NLOS_SINR_GAIN #Penalty for nLoS situation
