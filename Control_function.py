@@ -259,7 +259,7 @@ class Control_function:
             for sensor in self.agents + self.base_stations:
                 interference_powers[sensor.id][user.id] = self.__interference_power(sensor, user, self.agents)
 
-        SINR_matrix = self.__SINR(interference_powers, eval_all_users=True,eval_LoS=True)   #add determinist SNIR and probabilistic for LoS implementation
+        SINR_matrix = self.__SINR(interference_powers, eval_all_users=True,eval_LoS=True)   #added probabilistic SNIR for LoS implementation
         total_SINR_per_user = [max(col) for col in zip(*SINR_matrix)]
 
         RCR = 0

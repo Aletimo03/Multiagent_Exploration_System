@@ -97,11 +97,9 @@ def simulate(type_of_search, expl_weight, num_of_iter, deserialize, use_expl, us
 
         # --- Handle user appearance/disappearance based on probability matrix and Pd/Pn ---
 
-        # Move users along their predefined trajectories
-        for idx, user in enumerate(users):
-            user.move_user_along_trajectory(user_trajectories[idx], t)
-
-
+        #move users alongside their trajectories(from the dataset)
+        for user, trajectory in zip(users, user_trajectories):
+            user.move_user_along_trajectory(trajectory, t)
 
         if dto.is_concurrent:
             with Manager() as manager:
@@ -126,7 +124,7 @@ def simulate(type_of_search, expl_weight, num_of_iter, deserialize, use_expl, us
         cf.move_agents()
 
         # at the end RCR and exploration level are updated, each user's is_covered flag is assigned
-        current_reward = cf.RCR_after_move()
+        current_reward = cf.RCR_after_move()  # in this we effectively can have nLoS connection between sensor-user
         coverage_levels.append(current_reward)
 
         if use_expl:

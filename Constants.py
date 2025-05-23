@@ -8,7 +8,7 @@ EPSILON = 0.1  # percentage of how the agent moves in the chosen direction
 COMMUNICATION_RADIUS = 200  # of the agent (default: 200)
 DESIRED_COVERAGE_LEVEL = 0.5  # by the user
 MAX_DISPLACEMENT = 10  # max distance an agent can move from its actual position
-NUM_OF_ITERATIONS = 50  # max num of iterations before the algorithm stops (default: 100, test: 30)
+NUM_OF_ITERATIONS = 30  # max num of iterations before the algorithm stops (default: 100, test: 30)
 MIN_VERTICAL_DISTANCE = 0.15  # in meters
 SENSOR_HEIGHT = 0.15  # in meters
 AGENTS_COUPLING_PENALTY = 0.75
@@ -49,11 +49,10 @@ DECOUPLING_HISTORY_DEPTH = 5
 COUPLING_DISTANCE = EXPLORATION_CELL_WIDTH * 3
 INIT_PROBABLITY = 0.5
 
-#User movement and spawn control
-# User movement and spawn control — realistic human-like walking model
+# User movement — realistic human-like walking model
 USER_VELOCITY_MEAN = 1.4             # m/s — avg. walking speed (slightly reduced for smoother turns)
 USER_VELOCITY_STD = 0.1              # m/s — reduced variability for more stable paths
-USER_ANGULAR_VELOCITY_STD = 0.05     # rad/step — mild angular changes for ~1–2 turns per 30 steps
+USER_ANGULAR_VELOCITY_STD = 0.1     # rad/step — mild angular changes for ~1–2 turns per 30 steps
 
 
 

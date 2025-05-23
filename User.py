@@ -79,41 +79,42 @@ class User:
 
     def simulate_trajectory_ct(self, steps, area_width, area_length):
         """
-        Simulates a trajectory using a simple COORDINATED TURN model.
-        The actual position of the user is NOT modified.
-
-        :param steps: Number of time steps to simulate
-        :param area_width: Width of the area (used to bound the simulated positions)
-        :param area_length: Length of the area (used to bound the simulated positions)
-        :return: List of (x, y) positions representing the simulated trajectory
+        Simulates a trajectory using a refined coordinated turn model.
         """
         x, y = self.__x, self.__y
         theta = self.theta
 
-        # Initialize velocities
+        # Initial velocity and angular velocity
         v = max(0.0, random.gauss(USER_VELOCITY_MEAN, USER_VELOCITY_STD))
         omega = random.gauss(0.0, USER_ANGULAR_VELOCITY_STD)
 
         trajectory = []
 
-        alpha = 0.9  # Smoothing factor for continuity
+        alpha = 0.85  # Smoothing factor
+        beta = 0.2  # Heading persistence
+        gamma = 0.4  # Speed-turn coupling
 
         for _ in range(steps):
-            # Smooth update of velocity and angular velocity
-            new_v = max(0.0, random.gauss(USER_VELOCITY_MEAN, USER_VELOCITY_STD))
-            new_omega = random.gauss(0.0, USER_ANGULAR_VELOCITY_STD)
+            # New "intended" velocities
+            target_v = max(0.0, random.gauss(USER_VELOCITY_MEAN, USER_VELOCITY_STD))
+            target_omega = random.gauss(0.0, USER_ANGULAR_VELOCITY_STD)
 
-            v = alpha * v + (1 - alpha) * new_v
-            omega = alpha * omega + (1 - alpha) * new_omega
+            # Smooth update
+            v = alpha * v + (1 - alpha) * target_v
 
-            # Update heading
-            theta = (theta + omega) % (2 * math.pi)
+            # Turn rate coupling: slower speed = more turning freedom
+            max_turn = min(1.0, gamma / max(v, 0.1))
+            target_omega = max(-max_turn, min(max_turn, target_omega))
+            omega = alpha * omega + (1 - alpha) * target_omega
 
-            # Compute movement
+            # Persistent heading drift (makes arcs longer-lasting)
+            theta = (theta + omega + beta * omega) % (2 * math.pi)
+
+            # Motion
             dx = v * math.cos(theta)
             dy = v * math.sin(theta)
 
-            # Update position with bounds
+            # Keep in bounds
             x = min(max(x + dx, 0), area_width)
             y = min(max(y + dy, 0), area_length)
 
