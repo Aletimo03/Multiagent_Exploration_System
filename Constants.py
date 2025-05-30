@@ -40,7 +40,7 @@ NLOS_SINR_GAIN = 0.2
 # constants for exploration
 EXPLORATION_WEIGHT = 0.4  # weight of exploration in total cost-function (rho in th mathematical model)
 USER_DISCONNECTION_PROBABILITY = 0.008  # (Pd in the model)
-USER_APPEARANCE_PROBABILITY = 0.015  # (Pn in the model)
+USER_APPEARANCE_PROBABILITY = 0.0015  # (Pn in the model)
 EXPLORATION_CELL_WIDTH = 20  # in meters (default: 20, test: 50)
 EXPLORATION_CELL_HEIGTH = 20  # in meters (default: 20, test: 50)
 EXPLORATION_RADIUS = 200

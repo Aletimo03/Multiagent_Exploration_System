@@ -109,8 +109,11 @@ def plot_area(area, users, base_stations, agents, type_of_search, num_of_iter, p
 
         # Draw user positions
         for user, trajectory_history, color, marker in zip(users, user_trajectories_histories, colors, markers):
-            xu, yu = trajectory_history[i]
+         xu, yu = trajectory_history[i]
+         if user.is_active_at_time_step(i):
             user_scatter.append(plt.scatter(xu, yu, color=color, marker=marker, zorder=2))
+         else:
+             user_scatter.append(plt.scatter(xu,yu,color="gray", marker=marker,zorder=2 ))
 
         # Draw agent positions
         for agent, trajectory in zip(agents, agents_trajectories):

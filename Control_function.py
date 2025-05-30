@@ -136,6 +136,7 @@ class Control_function:
     def channel_gain(current_sensor, current_user):
         return PATH_GAIN / math.pow(math.dist(current_sensor.get_3D_position(), current_user.get_position() + (0,)), 2)
 
+
     @staticmethod
     # Returns the channel gain between two points p1 and p2
     def channel_gain_by_position(p1, p2):
@@ -195,18 +196,19 @@ class Control_function:
 
         for sensor in self.agents + self.base_stations:
             for user in self.users:
-                prev_state = LoS_matrix[sensor.id][user.id]
+             # if user.is_active:  for the moment lets have everything still
+                 prev_state = LoS_matrix[sensor.id][user.id]
 
-                if eval_LoS:
+                 if eval_LoS:
                     if prev_state == 'LoS':
                         new_state = 'NLoS' if random.random() < 0.05 else 'LoS' # to update with movement of the couple
                     else:
                         new_state = 'LoS' if random.random() < 0.25 else 'NLoS' # TO ADD TRANSITION COSTANTS/FUNCTIONS
                     LoS_matrix[sensor.id][user.id]=new_state
-                else:
+                 else:
                     new_state = prev_state
 
-                LoS_matrix[sensor.id][user.id] = new_state
+                 LoS_matrix[sensor.id][user.id] = new_state
 
         return LoS_matrix
 
@@ -218,6 +220,7 @@ class Control_function:
 
         for sensor in self.agents + self.base_stations:
             for user in self.users:
+            #  if user.is_active: TO DO LATER
                 if user.is_covered or eval_all_users:
                      sinr = (self.channel_gain(sensor, user) * sensor.transmitting_power) / (
                             interference_powers[sensor.id][user.id] + PSDN * BANDWIDTH ) * 0.95 #mu costant for LoS SNIR
@@ -243,6 +246,7 @@ class Control_function:
 
         total_SINR_per_user = [max(col) for col in zip(*SINR_matrix)]
         for user in self.users:
+         # if user.is_active: non metto il check perchè il goal lo trova con gli user attivi al momento e non sa qualli stanno per scomparire
             if total_SINR_per_user[user.id] - user.desired_coverage_level > 0 and (self.backhaul_network_available or is_graph_connected): # lazy evaluation
                 RCR += 1
 
@@ -267,11 +271,12 @@ class Control_function:
         for user in self.users:
             user_covered_flag = False
             if total_SINR_per_user[user.id] - user.desired_coverage_level > 0 and (self.backhaul_network_available or is_graph_connected):  # lazy evaluation
+              if user.is_active:
                 RCR += 1
-                user_covered_flag = True
+              user_covered_flag = True
             user.set_is_covered(user_covered_flag)
 
-        return RCR / len(self.users)
+        return RCR / (self.__get__active_users())
 
     # ==================================================================================================================
     # Method that SAMPLES new points
@@ -343,6 +348,7 @@ class Control_function:
                                         range(len(other_agents) + len(self.base_stations) + 1)
                                     ]
         for user in self.users:
+         #  if user.is_active: TO DO  LATER
             for sensor in [agent] + other_agents + self.base_stations:
                 partial_interference_powers[sensor.id][user.id] = self.__interference_power(sensor, user, other_agents)
 
@@ -360,6 +366,7 @@ class Control_function:
 
             # update interferences power with new agent position
             for user in self.users:
+            # if user.is_active: TO DO LATER
                 for sensor in other_agents + self.base_stations:
                     interference_powers_new_position[sensor.id][user.id] += ( agent.transmitting_power *
                                                                             self.channel_gain(agent, user) ) #mu COSTANT for LoS gain ( without markov chain)
@@ -728,6 +735,7 @@ class Control_function:
         elif self.expl_weight == "decrescent":
             num_user_covered = 0
             for user in self.users:
+            # if user.is_active: TO SEE LATER
                 if user.is_covered:
                     num_user_covered += 1
             return 1 if num_user_covered <= 1 else 2/num_user_covered
@@ -748,6 +756,7 @@ class Control_function:
                     matrix[i, j] = (1 - matrix[i, j]) * USER_APPEARANCE_PROBABILITY + matrix[i, j] * (1 - USER_DISCONNECTION_PROBABILITY)
 
         for user in self.users:
+         #  if user.is_active: DA VEDERE
             if len(user.coverage_history) >= 2 \
                     and not user.coverage_history[-1] and user.coverage_history[-2]:
                 user_x, user_y = user.get_position()
@@ -770,9 +779,18 @@ class Control_function:
     def __get_num_covered_users(self):
         num = 0
         for user in self.users:
+       #  if user.is_active: TO DO LATER MAYBE
             if user.is_covered:
                 num += 1
         return num
+
+
+    def __get__active_users(self):
+        i=0
+        for user in self.users:
+            if user.is_active:
+                i+=1
+        return i
 
 
     def update_users(self,users):

@@ -26,6 +26,11 @@ class User:
         # defining other attributes
         self.area = area
         self.desired_coverage_level = desired_coverage_level
+
+
+        self.is_active=True
+        self.death_time = int(random.gauss(NUM_OF_ITERATIONS + 4, 2.5))
+
         self.is_covered = None
         self.coverage_history = []
 
@@ -47,7 +52,17 @@ class User:
         self.__x = x
         self.__y = y
 
-    #Removed move fucntion
+
+    def set_inactive(self):
+        self.is_active=False
+
+    def is_active_at_time_step(self,i):
+        if i<self.death_time:
+            return True
+        else:
+            return False
+
+    #Removed move function
 
     def simulate_trajectory(self, steps, area_width, area_length):
         """
@@ -128,12 +143,20 @@ class User:
             Also updates the trajectory history accordingly.
 
             :param trajectory: List of (x, y) positions representing the trajectory
-            :param i: Index of the desired position in the trajectory
+            :param i: Index of the desired position in the trajectory and the actual step_time in the simulation
             """
             if i < 0 or i >= len(trajectory):
                 raise IndexError("Index out of bounds of trajectory list.")
 
+
             x, y = trajectory[i]
             self.set_position(x, y)
             self.trajectory_history.append((x, y))
+
+            if(i==self.death_time-1):
+                if i == self.death_time - 1:
+                    print(
+                        f"[INFO] User {self.id} is going to be dead after this step (death_time = {self.death_time:.2f}, current_step = {i})")
+                    self.set_inactive()
+
 
