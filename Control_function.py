@@ -6,6 +6,7 @@ import scipy
 from Sensor import Base_station, Agent
 from User import *
 import json
+from MCplGen_v3 import *
 
 class Control_function:
     def __init__(self, area, base_stations, agents, users, dto):
@@ -47,6 +48,11 @@ class Control_function:
         # Matrix that correlates each cell with the likelihood of a user in that area
         self.__prob_matrix = numpy.zeros((int(AREA_WIDTH / EXPLORATION_CELL_WIDTH),
                                             int(AREA_LENGTH / EXPLORATION_CELL_HEIGTH)))
+
+
+
+        self.__LoS_matrix = [[None for _ in range(len(self.users))] for _ in
+                          range(len(self.agents) + len(self.base_stations))]
 
     # ==================================================================================================================
     # Methods for agents connectivity
@@ -100,6 +106,9 @@ class Control_function:
             delta_y = agent.goal_point[1] - agent.get_y() + coupling_deviation[1]
             distance = math.dist(agent.goal_point, agent.get_2D_position())
 
+            agent.set_previous_x(agent.get_x())  # previous position for Path loss estimate
+            agent.set_previous_y(agent.get_y())
+
             # if the displacement is too big, it is limited to MAX_DISPLACEMENT
             if EPSILON * distance < MAX_DISPLACEMENT:
                 agent.set_x(agent.get_x() + EPSILON * delta_x)
@@ -134,8 +143,9 @@ class Control_function:
     @staticmethod
     # Return the channel gain between agent and user
     def channel_gain(current_sensor, current_user):
+       # print(PATH_GAIN / math.pow(math.dist(current_sensor.get_3D_position(), current_user.get_position() + (0,)), 2))
+       # print(math.pow(math.dist(current_sensor.get_3D_position(), current_user.get_position() + (0,)), 2))
         return PATH_GAIN / math.pow(math.dist(current_sensor.get_3D_position(), current_user.get_position() + (0,)), 2)
-
 
     @staticmethod
     # Returns the channel gain between two points p1 and p2
@@ -146,6 +156,7 @@ class Control_function:
         if len(p2) <= 2:
             p2 += (0,)
         return PATH_GAIN / math.pow(math.dist(p1, p2), 2)
+
 
     # Returns the total power of interferences that disturbs the signal between sensor and user
     def __interference_power(self, sensor, user, other_agents):
@@ -186,37 +197,55 @@ class Control_function:
                                          other_sensor.transmitting_power )
         return interference_pow
 
-    def __LoS_matrix(self, eval_LoS=False):
+
+
+    def __update_LoS_matrix(self, eval_LoS=False,create_matrix=False):
         """
         Returns a matrix [sensor_id][user_id] with 'LoS' or 'NLoS' values.
-        If eval_LoS=True, updates the Markov state using transition probabilities.
+        If eval_LoS=True, updates the Markov state using actual motion-based transition.
         """
-        LoS_matrix = [['LoS' for _ in range(len(self.users))] for _ in
-                      range(len(self.agents) + len(self.base_stations))]
-
         for sensor in self.agents + self.base_stations:
             for user in self.users:
-             # if user.is_active:  for the moment lets have everything still
-                 prev_state = LoS_matrix[sensor.id][user.id]
 
-                 if eval_LoS:
-                    if prev_state == 'LoS':
-                        new_state = 'NLoS' if random.random() < 0.05 else 'LoS' # to update with movement of the couple
-                    else:
-                        new_state = 'LoS' if random.random() < 0.25 else 'NLoS' # TO ADD TRANSITION COSTANTS/FUNCTIONS
-                    LoS_matrix[sensor.id][user.id]=new_state
-                 else:
-                    new_state = prev_state
+                if self.__LoS_matrix[sensor.id][user.id] is None:
+                    raise ValueError("LoS matrix not initialized. Call `initialize_LoS_matrix_from_probability` first.")
 
-                 LoS_matrix[sensor.id][user.id] = new_state
+                prev_state = self.__LoS_matrix[sensor.id][user.id]
 
-        return LoS_matrix
+                # 3D positions
+                x_uav, y_uav, z_uav = sensor.get_3D_position()
+
+                # Distance calculations
+                d_ij, prev_d, d_tr = self.__get__MCplGen_parameters(user, sensor)
+
+                if eval_LoS:
+                    # Apply your path loss generator and get new state
+                    _, state = MCPlGen(
+                        scenario=TYPE_OF_SCENARIO,  # You may generalize this
+                        f=CARRIER_FREQUENCY,  # Frequency in MHz
+                        h=z_uav,  # UAV altitude
+                        d_ij=d_ij,
+                        d_tr=d_tr,
+                        prev_d=prev_d,
+                        average=False,
+                        state=prev_state
+                    )
+
+                new_state = 'LoS' if state == 1 else 'NLoS'
+                #if new_state != prev_state:
+                  #  print(f"User {user.id} transitioned to {new_state} state in respect to {sensor.id}")
+               # else:
+                   # print(f"User {user.id} remains in {new_state} state in respect to {sensor.id}")
+
+                self.__LoS_matrix[sensor.id][user.id] = new_state
+
+        return self.__LoS_matrix
 
     # returns a matrix that associate at each user the SINR of each agent
     def __SINR(self, interference_powers, eval_all_users=False,eval_LoS=False):
         SINR_matrix = numpy.zeros((len(self.agents) + len(self.base_stations), len(self.users)))
 
-        LoS_matrix = self.__LoS_matrix(eval_LoS) if eval_LoS else None
+        LoS_matrix = self.__update_LoS_matrix(eval_LoS) if eval_LoS else None
 
         for sensor in self.agents + self.base_stations:
             for user in self.users:
@@ -224,11 +253,12 @@ class Control_function:
                 if user.is_covered or eval_all_users:
                      sinr = (self.channel_gain(sensor, user) * sensor.transmitting_power) / (
                             interference_powers[sensor.id][user.id] + PSDN * BANDWIDTH ) * 0.95 #mu costant for LoS SNIR
-                                                                                            # SNIR probabilistic GAIN
 
-                     if eval_LoS and LoS_matrix[sensor.id][user.id] == 'NLoS':
-                        sinr *= NLOS_SINR_GAIN #Penalty for nLoS situation
 
+                                                                    # SNIR probabilistic GAIN
+
+                   #  if eval_LoS and LoS_matrix[sensor.id][user.id] == 'NLoS':
+                      #  sinr *= NLOS_SINR_GAIN #Penalty for nLoS situation
                      SINR_matrix[sensor.id][user.id] = sinr
 
         return SINR_matrix
@@ -238,7 +268,7 @@ class Control_function:
     # ==================================================================================================================
 
     def __RCR(self, SINR_matrix):
-        RCR = 0
+        RCR_active_users = 0
 
         # only if the backhaul network is not available, check for agents' connectivity
         if not self.backhaul_network_available:
@@ -246,11 +276,11 @@ class Control_function:
 
         total_SINR_per_user = [max(col) for col in zip(*SINR_matrix)]
         for user in self.users:
-         # if user.is_active: non metto il check perchè il goal lo trova con gli user attivi al momento e non sa qualli stanno per scomparire
+          if user.is_active: # non metto il check perchè il goal lo trova con gli user attivi al momento e non sa qualli stanno per scomparire
             if total_SINR_per_user[user.id] - user.desired_coverage_level > 0 and (self.backhaul_network_available or is_graph_connected): # lazy evaluation
-                RCR += 1
+                RCR_active_users += 1
 
-        return RCR / self.__get_num_covered_users()
+        return RCR_active_users / self.__get_num_covered_users()
 
     # Returns the RCR value after the agents' movement, not used in control function
     def RCR_after_move(self):
@@ -268,15 +298,20 @@ class Control_function:
         total_SINR_per_user = [max(col) for col in zip(*SINR_matrix)]
 
         RCR = 0
+        RCR_is_active=0
         for user in self.users:
             user_covered_flag = False
             if total_SINR_per_user[user.id] - user.desired_coverage_level > 0 and (self.backhaul_network_available or is_graph_connected):  # lazy evaluation
               if user.is_active:
-                RCR += 1
+                RCR_is_active += 1
+              RCR +=1
               user_covered_flag = True
             user.set_is_covered(user_covered_flag)
+        all_user_coverage = RCR / self.__get__users()
 
-        return RCR / (self.__get__active_users())
+        print("Active users covered: ",RCR_is_active,",All user covered:",RCR,", Number of active users",self.__get__active_users(),"All user coverage level", all_user_coverage)
+
+        return RCR_is_active / (self.__get__active_users())
 
     # ==================================================================================================================
     # Method that SAMPLES new points
@@ -792,6 +827,110 @@ class Control_function:
                 i+=1
         return i
 
+
+    def __get__users(self):
+        i=0
+        for user in self.users:
+                i+=1
+        return i
+
+
+    def __get__MCplGen_parameters(self,user,sensor):
+        # 3D positions
+        x_uav, y_uav, z_uav = sensor.get_3D_position()
+        x_user, y_user, _ = user.get_3D_position()
+
+        prev_x_uav, prev_y_uav = sensor.get_2D_previous_position()
+        prev_x_user, prev_y_user = user.get_previous_position()
+
+        # Distance calculations
+        d_ij = np.linalg.norm([x_uav - x_user, y_uav - y_user, z_uav])  # Current 3D distance
+        prev_d = np.linalg.norm(
+            [prev_x_uav - prev_x_user, prev_y_uav - prev_y_user, z_uav])  # Previous 3D distance
+        d_tr = np.linalg.norm([x_uav - prev_x_uav, y_uav - prev_y_uav])  # UAV horizontal movement
+
+
+        return d_ij,prev_d,d_tr
+
+
+    def get_starting_LoS_prob(self,scenario,f,h,d_ij):
+        # Parameter sets
+        freq700MHz = {
+            'Suburban': {'a': 4.879, 'b': 0.4290, 'mu1': 0.0, 'mu2': 18, 'a1': 11.53, 'b1': 0.06, 'a2': 26.53,
+                         'b2': 0.03},
+            'Urban': {'a': 9.611, 'b': 0.1580, 'mu1': 0.6, 'mu2': 17, 'a1': 10.98, 'b1': 0.05, 'a2': 23.31, 'b2': 0.03},
+            'DenseUrban': {'a': 12.081, 'b': 0.1139, 'mu1': 1.0, 'mu2': 20, 'a1': 9.64, 'b1': 0.04, 'a2': 30.83,
+                           'b2': 0.04},
+            'HighriseUrban': {'a': 27.230, 'b': 0.0797, 'mu1': 1.5, 'mu2': 29, 'a1': 9.16, 'b1': 0.03, 'a2': 32.13,
+                              'b2': 0.03}
+        }
+
+        freq2GHz = {
+            'Suburban': {'a': 4.879, 'b': 0.4290, 'mu1': 0.1, 'mu2': 21, 'a1': 11.25, 'b1': 0.06, 'a2': 32.17,
+                         'b2': 0.03},
+            'Urban': {'a': 9.611, 'b': 0.1580, 'mu1': 1.0, 'mu2': 20, 'a1': 10.39, 'b1': 0.05, 'a2': 29.60, 'b2': 0.03},
+            'DenseUrban': {'a': 12.081, 'b': 0.1139, 'mu1': 1.6, 'mu2': 23, 'a1': 8.96, 'b1': 0.04, 'a2': 35.97,
+                           'b2': 0.04},
+            'HighriseUrban': {'a': 27.230, 'b': 0.0797, 'mu1': 2.3, 'mu2': 34, 'a1': 7.37, 'b1': 0.03, 'a2': 37.08,
+                              'b2': 0.03}
+        }
+
+        freq5_8GHz = {
+            'Suburban': {'a': 4.879, 'b': 0.4290, 'mu1': 0.2, 'mu2': 24, 'a1': 11.04, 'b1': 0.06, 'a2': 39.56,
+                         'b2': 0.04},
+            'Urban': {'a': 9.611, 'b': 0.1580, 'mu1': 1.2, 'mu2': 23, 'a1': 10.67, 'b1': 0.05, 'a2': 35.85, 'b2': 0.04},
+            'DenseUrban': {'a': 12.081, 'b': 0.1139, 'mu1': 1.8, 'mu2': 26, 'a1': 9.21, 'b1': 0.04, 'a2': 40.86,
+                           'b2': 0.04},
+            'HighriseUrban': {'a': 27.230, 'b': 0.0797, 'mu1': 2.5, 'mu2': 41, 'a1': 7.15, 'b1': 0.03, 'a2': 40.96,
+                              'b2': 0.03}
+        }
+
+        if scenario == "Suburban":
+            kappa0 = 74
+        elif scenario == "DenseUrban":
+            kappa0 = 28
+        else:
+            kappa0 = 50
+
+        # Select parameter set
+        if f < 1000:
+            pars = freq700MHz[scenario]
+        elif f <= 3000:
+            pars = freq2GHz[scenario]
+        else:
+            pars = freq5_8GHz[scenario]
+
+        # Elevation angle
+        theta_rad = np.arcsin(h / d_ij)
+        theta_deg = np.degrees(theta_rad)
+
+        # LoS probability
+        p1 = los_probability(theta_deg, pars['a'], pars['b'])
+
+        return p1
+
+    def initialize_LoS_matrix_from_probability(self):
+        """
+        Populates the initially empty __LoS_matrix with 'LoS' or 'NLoS' based on elevation angle probability.
+        """
+        for sensor in self.agents + self.base_stations:
+            for user in self.users:
+                d_ij, _, _ = self.__get__MCplGen_parameters(user, sensor)
+                _, _, h = sensor.get_3D_position()
+
+                p_los = self.get_starting_LoS_prob(
+                    scenario=TYPE_OF_SCENARIO,
+                    f=CARRIER_FREQUENCY,
+                    h=h,
+                    d_ij=d_ij
+                )
+
+                # Probabilistic decision: you can use random or threshold
+                state = 'LoS' if np.random.rand() < p_los else 'NLoS'
+               # print(f"User {user.id } has {p_los} probability of being in LoS in respect to {sensor.id}")
+
+                self.__LoS_matrix[sensor.id][user.id] = state
+               # print(f"User {user.id} has {state} state in respect to {sensor.id} after being inizialized")
 
     def update_users(self,users):
         self.users=users

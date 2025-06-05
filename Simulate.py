@@ -66,8 +66,13 @@ def simulate(type_of_search, expl_weight, num_of_iter, deserialize, use_expl, us
     )
     cf = Control_function(area, base_stations, agents, users, dto)
 
+    cf.initialize_LoS_matrix_from_probability()
+
+
     # starting points for coverage & exploration levels
+   # print("[BEFORE]first rcr after move ")
     current_reward = cf.RCR_after_move()
+   # print("[AFTER]first rcr after move ")
     coverage_levels.append(current_reward)
 
     if use_expl:

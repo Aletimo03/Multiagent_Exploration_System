@@ -8,7 +8,7 @@ EPSILON = 0.1  # percentage of how the agent moves in the chosen direction
 COMMUNICATION_RADIUS = 200  # of the agent (default: 200)
 DESIRED_COVERAGE_LEVEL = 0.5  # by the user
 MAX_DISPLACEMENT = 10  # max distance an agent can move from its actual position
-NUM_OF_ITERATIONS = 30  # max num of iterations before the algorithm stops (default: 100, test: 30)
+NUM_OF_ITERATIONS = 30 # max num of iterations before the algorithm stops (default: 100, test: 30)
 MIN_VERTICAL_DISTANCE = 0.15  # in meters
 SENSOR_HEIGHT = 0.15  # in meters
 AGENTS_COUPLING_PENALTY = 0.75
@@ -25,6 +25,10 @@ BANDWIDTH = 2000000  # in Hz
 
 """ PATH_GAIN = lambda^2/(4*pi)^2, where lambda = c/f is the wavelength of the signal."""
 PATH_GAIN = 0.0001
+
+"""FOR PATH LOSS ESTIMATE USING MCplGen.py snippet"""
+CARRIER_FREQUENCY=2000
+TYPE_OF_SCENARIO="Urban"
 
 """Altitude of the sensors"""
 ALTITUDE = 50  # in meters

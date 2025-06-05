@@ -12,6 +12,8 @@ class Sensor:
         # random placement, except for the altitude to prevent collision between agents
         self._x, self._y = random.uniform(0, area.width), random.uniform(0, area.length)
 
+        self._previous_x, self._previous_y = self._x,self._y # at first lets put previous the same as the current
+
         # set spawn point for agents at base station
         # spawn_point_list = [(1 / 4 * area.width, 1 / 4 * area.length), (1 / 4 * area.width, 3 / 4 * area.length), (3 / 4 * area.width, 1 / 4 * area.length), (3 / 4 * area.width, 3 / 4 * area.length)]
         # self._x, self._y = random.choice(spawn_point_list)
@@ -29,11 +31,20 @@ class Sensor:
     def get_y(self):
         return self._y
 
+    def get_previous_x(self):
+        return self._previous_x
+
+    def get_previous_y(self):
+        return self._previous_y
+
     def get_z(self):
         return self._z
 
     def get_2D_position(self):
         return self._x, self._y
+
+    def get_2D_previous_position(self):
+        return self._previous_x,self._previous_y
 
     def get_3D_position(self):
         return self._x, self._y, self._z
@@ -64,6 +75,16 @@ class Agent(Sensor):
 
     def set_y(self, y):
         self._y = y
+
+    def set_2D_previous_position(self, x, y):
+        self._previous_x = x
+        self._previous_y = y
+
+    def set_previous_x(self, x):
+        self._previous_x = x
+
+    def set_previous_y(self, y):
+        self._previous_y= y
 
 
 class Base_station(Sensor):

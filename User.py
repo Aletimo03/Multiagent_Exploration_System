@@ -12,6 +12,7 @@ class User:
     def __init__(self, area, desired_coverage_level, deserialize=False):
         self.__x = None
         self.__y = None
+
         self.id = User.id
         User.id += 1
 
@@ -23,13 +24,15 @@ class User:
             self.__x, self.__y = random.uniform(0, area.length), random.uniform(0, area.width)
             pickle.dump((self.__x, self.__y), open("User position/user" + str(self.id) + ".p", "wb"))
 
+        self._previous_x, self._previous_y = self.__x, self.__y  # at first lets put previous the same as the current
+
         # defining other attributes
         self.area = area
         self.desired_coverage_level = desired_coverage_level
 
 
         self.is_active=True
-        self.death_time = int(random.gauss(NUM_OF_ITERATIONS + 4, 2.5))
+        self.death_time = int(random.gauss(NUM_OF_ITERATIONS + 2, 2.5))  # si puo usare una esponenziale
 
         self.is_covered = None
         self.coverage_history = []
@@ -45,12 +48,19 @@ class User:
     def get_position(self):
         return self.__x, self.__y
 
+    def get_previous_position(self):
+        return self._previous_x,self._previous_y
+
     def get_3D_position(self):
         return self.get_position() + (0,)
 
     def set_position(self, x, y):
         self.__x = x
         self.__y = y
+
+    def set_previous_position(self, x, y):
+        self._previous_x = x
+        self._previous_y = y
 
 
     def set_inactive(self):
@@ -150,13 +160,11 @@ class User:
 
 
             x, y = trajectory[i]
+            previous_x,previous_y = trajectory[i-1]
             self.set_position(x, y)
+            self.set_previous_position(previous_x,previous_y)
             self.trajectory_history.append((x, y))
 
-            if(i==self.death_time-1):
-                if i == self.death_time - 1:
-                    print(
-                        f"[INFO] User {self.id} is going to be dead after this step (death_time = {self.death_time:.2f}, current_step = {i})")
+            if i==self.death_time-1:
+                    print( f"[INFO] User {self.id} is going to be dead after this step (death_time = {self.death_time:.2f}, current_step = {i})")
                     self.set_inactive()
-
-
