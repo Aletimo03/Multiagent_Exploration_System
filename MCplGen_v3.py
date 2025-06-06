@@ -1,4 +1,29 @@
+import math
 import numpy as np
+
+
+def calculate_distance_3d(p1_3d, p2_3d):
+        """Calculates the Euclidean distance between two 3D points."""
+        dx = p1_3d[0] - p2_3d[0]
+        dy = p1_3d[1] - p2_3d[1]
+        dz = p1_3d[2] - p2_3d[2]
+        return math.sqrt(dx * dx + dy * dy + dz * dz)
+
+
+def calculate_pathloss(scenario, frequency, altitude, distance_ij, distance_tr=None, prev_distance=None,
+                            average=True, state=None):
+        """Helper for MCPlGen call."""
+        return MCPlGen(
+            scenario=scenario,
+            f=frequency,
+            h=altitude,
+            d_ij=distance_ij,
+            d_tr=distance_tr,
+            prev_d=prev_distance,
+            average=average,
+            state=state
+        )
+
 
 def los_probability(theta_deg, a, b):
     return 1.0 / (1 + a * np.exp(-b * (theta_deg - a)))
@@ -100,16 +125,19 @@ def MCPlGen(scenario, f, h, d_ij, d_tr, prev_d,state, average=False):
         totPL_linear = 10 ** (-totPL / 10)
 
         # Holding distance
-        d_hold = np.random.exponential(1 / lam)
-        delta_d = abs(d_ij - prev_d)
-        check_dist = max(d_tr, delta_d)
+        if prev_d is not None and d_tr is not None:  # to just see the totPL_linear and not updating the LoS state
+         d_hold = np.random.exponential(1 / lam)
+         delta_d = abs(d_ij - prev_d)
+         check_dist = max(d_tr, delta_d)
 
-        if delta_d == 0 and check_dist == 0:
-            state = 1 if np.random.rand() < p1 else 2
-        elif check_dist >= d_hold:
+        # if delta_d == 0 and check_dist == 0:           #at the start of the simulations
+        #    state = 1 if np.random.rand() < p1 else 2
+         if check_dist >= d_hold:
             state = next_state
 
-        return totPL_linear, state
+         return totPL_linear, state
+        else:
+            return totPL_linear
 
 
 if __name__ == "__main__":

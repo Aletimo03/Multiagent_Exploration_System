@@ -49,6 +49,9 @@ class Control_function:
         self.__prob_matrix = numpy.zeros((int(AREA_WIDTH / EXPLORATION_CELL_WIDTH),
                                             int(AREA_LENGTH / EXPLORATION_CELL_HEIGTH)))
 
+        self.num_prob_cells_x = int(AREA_WIDTH / EXPLORATION_CELL_WIDTH)
+        self.num_prob_cells_y = int(AREA_LENGTH / EXPLORATION_CELL_HEIGTH)
+
 
 
         self.__LoS_matrix = [[None for _ in range(len(self.users))] for _ in
@@ -139,24 +142,70 @@ class Control_function:
     # ==================================================================================================================
     # Methods for the SIGNAL analysis
     # ==================================================================================================================
-
     @staticmethod
-    # Return the channel gain between agent and user
     def channel_gain(current_sensor, current_user):
-       # print(PATH_GAIN / math.pow(math.dist(current_sensor.get_3D_position(), current_user.get_position() + (0,)), 2))
-       # print(math.pow(math.dist(current_sensor.get_3D_position(), current_user.get_position() + (0,)), 2))
-        return PATH_GAIN / math.pow(math.dist(current_sensor.get_3D_position(), current_user.get_position() + (0,)), 2)
+        """Return the channel gain between agent and user (average pathloss).  """
+
+        sensor_pos = current_sensor.get_3D_position()
+        user_pos = current_user.get_3D_position()
+        d_ij = calculate_distance_3d(sensor_pos, user_pos)
+        z_uav = sensor_pos[2]  # UAV altitude
+        pathloss= calculate_pathloss(
+            scenario=TYPE_OF_SCENARIO,
+            frequency=CARRIER_FREQUENCY,
+            altitude=z_uav,
+            distance_ij=d_ij,
+            average=True,
+            state=None
+        )
+       # print(pathloss)
+        return pathloss
+
+       # return PATH_GAIN / math.pow(math.dist(current_sensor.get_3D_position(), current_user.get_position() + (0,)), 2)
+
 
     @staticmethod
-    # Returns the channel gain between two points p1 and p2
+    def LoS_based_channel_gain_(current_sensor, current_user, LoS_state):
+        """Return the LoS-based channel gain between agent and user."""
+        sensor_pos = current_sensor.get_3D_position()
+        user_pos = current_user.get_3D_position()
+        d_ij = calculate_distance_3d(sensor_pos, user_pos)
+        z_uav = sensor_pos[2]  # UAV altitude
+
+        return calculate_pathloss(
+            scenario=TYPE_OF_SCENARIO,
+            frequency=CARRIER_FREQUENCY,
+            altitude=z_uav,
+            distance_ij=d_ij,
+            average=False,
+            state=LoS_state
+        )
+
+    @staticmethod
     def channel_gain_by_position(p1, p2):
+        """Calculates the pathloss (channel gain) between two 3D positions using MCPlGen.
+           Assumes p1 is the UAV position, and its z-coordinate is the altitude.
+
+        d_ij = calculate_distance_3d(p1, p2)
+        z_uav = p1[2]  # UAV altitude from p1
+
+        return calculate_pathloss(
+            scenario=TYPE_OF_SCENARIO,
+            frequency=CARRIER_FREQUENCY,
+            altitude=z_uav,
+            distance_ij=d_ij,
+            average=True,
+            state=None
+        )
+
+        using this implementation causes explaration levels to drop
+         """
         # adjusting dimension to avoid errors
         if len(p1) <= 2:
             p1 += (0,)
         if len(p2) <= 2:
             p2 += (0,)
         return PATH_GAIN / math.pow(math.dist(p1, p2), 2)
-
 
     # Returns the total power of interferences that disturbs the signal between sensor and user
     def __interference_power(self, sensor, user, other_agents):
@@ -251,15 +300,20 @@ class Control_function:
             for user in self.users:
             #  if user.is_active: TO DO LATER
                 if user.is_covered or eval_all_users:
-                     sinr = (self.channel_gain(sensor, user) * sensor.transmitting_power) / (
-                            interference_powers[sensor.id][user.id] + PSDN * BANDWIDTH ) * 0.95 #mu costant for LoS SNIR
+                    if eval_LoS:
+                      updated_state = LoS_matrix[sensor.id][user.id]
+                      sinr = (self.LoS_based_channel_gain_(sensor, user,updated_state) * sensor.transmitting_power) / (
+                            interference_powers[sensor.id][user.id] + PSDN * BANDWIDTH )
+
+                    #  print("State:" ,updated_state,"with sinr: ", sinr )
+
+                    # SNIR probabilistic GAIN
+                    else:
+                      sinr = (self.channel_gain(sensor, user) * sensor.transmitting_power) / (
+                                interference_powers[sensor.id][user.id] + PSDN * BANDWIDTH)
 
 
-                                                                    # SNIR probabilistic GAIN
-
-                   #  if eval_LoS and LoS_matrix[sensor.id][user.id] == 'NLoS':
-                      #  sinr *= NLOS_SINR_GAIN #Penalty for nLoS situation
-                     SINR_matrix[sensor.id][user.id] = sinr
+                    SINR_matrix[sensor.id][user.id] = sinr
 
         return SINR_matrix
 
@@ -280,7 +334,7 @@ class Control_function:
             if total_SINR_per_user[user.id] - user.desired_coverage_level > 0 and (self.backhaul_network_available or is_graph_connected): # lazy evaluation
                 RCR_active_users += 1
 
-        return RCR_active_users / self.__get_num_covered_users()
+        return RCR_active_users / self.__get__users()  # TODO riguardare se era num covered user or not
 
     # Returns the RCR value after the agents' movement, not used in control function
     def RCR_after_move(self):
@@ -791,12 +845,12 @@ class Control_function:
                     matrix[i, j] = (1 - matrix[i, j]) * USER_APPEARANCE_PROBABILITY + matrix[i, j] * (1 - USER_DISCONNECTION_PROBABILITY)
 
         for user in self.users:
-         #  if user.is_active: DA VEDERE
+           if user.is_active: # DA VEDERE
             if len(user.coverage_history) >= 2 \
                     and not user.coverage_history[-1] and user.coverage_history[-2]:
                 user_x, user_y = user.get_position()
-                cell_x = int(user_x / EXPLORATION_CELL_WIDTH)
-                cell_y = int(user_y / EXPLORATION_CELL_HEIGTH)
+                cell_x = min(int(user_x / EXPLORATION_CELL_WIDTH), self.num_prob_cells_x - 1)
+                cell_y = min(int(user_y / EXPLORATION_CELL_HEIGTH), self.num_prob_cells_y - 1)
                 matrix[cell_x][cell_y] = 1
 
     # Used to automatically update the prob_matrix from outside

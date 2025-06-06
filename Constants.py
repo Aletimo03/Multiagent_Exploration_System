@@ -3,7 +3,7 @@ AREA_LENGTH = 1000  # in meters
 
 # constants for the simulation taken from ///C:/Users/andrea/OneDrive/Desktop/uni/Tesi/Deep_Reinforcement_Learning-Based_Effective_Coverage_Control_With_Connectivity_Constraints%20(1)%20(1).pdf
 # and from file:///C:/Users/andrea/OneDrive/Desktop/uni/Tesi/Dynamic_Coverage_Control_of_Multi_Agent_Systems_v1.pdf
-NUM_OF_SAMPLES = 250  # number of points each agent generates as potentially new positions (default: 250, test: 25)
+NUM_OF_SAMPLES = 25  # number of points each agent generates as potentially new positions (default: 250, test: 25)
 EPSILON = 0.1  # percentage of how the agent moves in the chosen direction
 COMMUNICATION_RADIUS = 200  # of the agent (default: 200)
 DESIRED_COVERAGE_LEVEL = 0.5  # by the user
@@ -17,7 +17,7 @@ M = 30  # number of users
 N = 10  # number of agents
 B = 4  # number of base stations
 PENALTY = 1/M  # const for penalty search
-NUM_OF_SIMULATIONS = 1
+NUM_OF_SIMULATIONS = 3
 
 """ Power Spectral Density Noise """
 PSDN = 7.164E-16  # =-174dBm/Hz
@@ -28,7 +28,7 @@ PATH_GAIN = 0.0001
 
 """FOR PATH LOSS ESTIMATE USING MCplGen.py snippet"""
 CARRIER_FREQUENCY=2000
-TYPE_OF_SCENARIO="Urban"
+TYPE_OF_SCENARIO="HighriseUrban"
 
 """Altitude of the sensors"""
 ALTITUDE = 50  # in meters
@@ -38,13 +38,13 @@ TRANSMITTING_POWER = 0.2  # in Watts
 
 
 """SINR penalty multiplier for NLoS conditions"""
-NLOS_SINR_GAIN = 0.2
+NLOS_SINR_GAIN = 0.2 # not used anymore
 
 
 # constants for exploration
 EXPLORATION_WEIGHT = 0.4  # weight of exploration in total cost-function (rho in th mathematical model)
 USER_DISCONNECTION_PROBABILITY = 0.008  # (Pd in the model)
-USER_APPEARANCE_PROBABILITY = 0.0015  # (Pn in the model)
+USER_APPEARANCE_PROBABILITY = 0.015  # (Pn in the model)
 EXPLORATION_CELL_WIDTH = 20  # in meters (default: 20, test: 50)
 EXPLORATION_CELL_HEIGTH = 20  # in meters (default: 20, test: 50)
 EXPLORATION_RADIUS = 200
