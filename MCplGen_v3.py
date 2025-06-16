@@ -39,21 +39,21 @@ def MCPlGen(scenario, f, h, d_ij, d_tr, prev_d,state, average=False):
     
     # Parameter sets
     freq700MHz = {
-        'Suburban': {'a': 4.879, 'b': 0.4290, 'mu1': 0.0, 'mu2': 18, 'a1': 11.53, 'b1': 0.06, 'a2': 26.53, 'b2': 0.03},
+        'SubUrban': {'a': 4.879, 'b': 0.4290, 'mu1': 0.0, 'mu2': 18, 'a1': 11.53, 'b1': 0.06, 'a2': 26.53, 'b2': 0.03},
         'Urban': {'a': 9.611, 'b': 0.1580, 'mu1': 0.6, 'mu2': 17, 'a1': 10.98, 'b1': 0.05, 'a2': 23.31, 'b2': 0.03},
         'DenseUrban': {'a': 12.081, 'b': 0.1139, 'mu1': 1.0, 'mu2': 20, 'a1': 9.64, 'b1': 0.04, 'a2': 30.83, 'b2': 0.04},
         'HighriseUrban': {'a': 27.230, 'b': 0.0797, 'mu1': 1.5, 'mu2': 29, 'a1': 9.16, 'b1': 0.03, 'a2': 32.13, 'b2': 0.03}
     }
 
     freq2GHz = {
-        'Suburban': {'a': 4.879, 'b': 0.4290, 'mu1': 0.1, 'mu2': 21, 'a1': 11.25, 'b1': 0.06, 'a2': 32.17, 'b2': 0.03},
+        'SubUrban': {'a': 4.879, 'b': 0.4290, 'mu1': 0.1, 'mu2': 21, 'a1': 11.25, 'b1': 0.06, 'a2': 32.17, 'b2': 0.03},
         'Urban': {'a': 9.611, 'b': 0.1580, 'mu1': 1.0, 'mu2': 20, 'a1': 10.39, 'b1': 0.05, 'a2': 29.60, 'b2': 0.03},
         'DenseUrban': {'a': 12.081, 'b': 0.1139, 'mu1': 1.6, 'mu2': 23, 'a1': 8.96, 'b1': 0.04, 'a2': 35.97, 'b2': 0.04},
         'HighriseUrban': {'a': 27.230, 'b': 0.0797, 'mu1': 2.3, 'mu2': 34, 'a1': 7.37, 'b1': 0.03, 'a2': 37.08, 'b2': 0.03}
     }
 
     freq5_8GHz = {
-        'Suburban': {'a': 4.879, 'b': 0.4290, 'mu1': 0.2, 'mu2': 24, 'a1': 11.04, 'b1': 0.06, 'a2': 39.56, 'b2': 0.04},
+        'SubUrban': {'a': 4.879, 'b': 0.4290, 'mu1': 0.2, 'mu2': 24, 'a1': 11.04, 'b1': 0.06, 'a2': 39.56, 'b2': 0.04},
         'Urban': {'a': 9.611, 'b': 0.1580, 'mu1': 1.2, 'mu2': 23, 'a1': 10.67, 'b1': 0.05, 'a2': 35.85, 'b2': 0.04},
         'DenseUrban': {'a': 12.081, 'b': 0.1139, 'mu1': 1.8, 'mu2': 26, 'a1': 9.21, 'b1': 0.04, 'a2': 40.86, 'b2': 0.04},
         'HighriseUrban': {'a': 27.230, 'b': 0.0797, 'mu1': 2.5, 'mu2': 41, 'a1': 7.15, 'b1': 0.03, 'a2': 40.96, 'b2': 0.03}
@@ -80,7 +80,7 @@ def MCPlGen(scenario, f, h, d_ij, d_tr, prev_d,state, average=False):
 
 
     # FSPL
-    fspl = 20 * np.log10(h / np.sin(theta_rad)) + 20 * np.log10(f) - 27.55
+    fspl = 20 * np.log10(d_ij) + 20 * np.log10(f) - 27.55
 
     # LoS probability
     p1 = los_probability(theta_deg, pars['a'], pars['b'])
@@ -130,10 +130,16 @@ def MCPlGen(scenario, f, h, d_ij, d_tr, prev_d,state, average=False):
          delta_d = abs(d_ij - prev_d)
          check_dist = max(d_tr, delta_d)
 
-        # if delta_d == 0 and check_dist == 0:           #at the start of the simulations
-        #    state = 1 if np.random.rand() < p1 else 2
-         if check_dist >= d_hold:
-            state = next_state
+
+     #    print("DELTA D AND CHECK DIST:",delta_d,check_dist)
+         if (delta_d == 0 and check_dist == 0) or (check_dist >= d_hold):
+            state = 1  if np.random.rand() < p1 else 2
+
+       #  if (delta_d== 0 and check_dist==0):
+       #   print ("start of the simulation with LoS probabilit:",p1) #at the start of the simulations
+
+       #  if check_dist >= d_hold:
+        #    state = 1 # next_state
 
          return totPL_linear, state
         else:
@@ -148,9 +154,9 @@ if __name__ == "__main__":
  d_tr = 0
 
  # Averaged
- avgPL = MCPlGen('Urban', 2e3, 54, d_ij, d_tr, prev_d,1, average=True)
+ avgPL = MCPlGen('Urban', 2e3, 50, d_ij, d_tr, prev_d,1, average=True)
  print(f"Averaged Path Loss: {avgPL:.12f} dB")
 
  # Stochastic
- stochPL, state = MCPlGen('Urban', 2e3, 54, d_ij, d_tr, prev_d,1)
+ stochPL, state = MCPlGen('Urban', 2e3, 0.5, d_ij, d_tr, prev_d,2)
  print(f"Stochastic Path Loss: {stochPL:.12f} dB | State: {state}")
