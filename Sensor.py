@@ -1,6 +1,7 @@
 import pickle
 import random
 
+from Constants import *
 
 class Sensor:
     id = 0  # incremental id of all sensors, static attribute
@@ -88,10 +89,31 @@ class Agent(Sensor):
 
 
 class Base_station(Sensor):
-    def __init__(self, area, communication_radius, x, y, transmitting_power, interference_by_bs=False, altitude=0.5):
+    def __init__(self, area, communication_radius, x, y, scenario, interference_by_bs=False):
+
+        # Define Tx power and altitude per scenario
+        if scenario == "Suburban":
+            altitude = 30  # meters
+            transmitting_power = 30  # watts (between 20-40 W)
+        elif scenario == "Urban":
+            altitude = 75  # meters (between 50-100 m)
+            transmitting_power = 15  # watts (between 10-20 W)
+        elif scenario == "Dense Urban":
+            altitude = 125  # meters (between 100-150 m)
+            transmitting_power = 7.5  # watts (between 5-10 W)
+        elif scenario == "Highrise Urban":
+            altitude = 250  # meters (between 150-300 m)
+            transmitting_power = 3  # watts (between 1-5 W)
+        else:
+            # Default values if unknown scenario
+            altitude = 30
+            transmitting_power = 20
+
         super().__init__(area, communication_radius, transmitting_power, altitude)
 
-        # setting if the base station can interfere with agents
+        self.altitude = altitude
+
+        # Setting if the base station can interfere with agents
         self.interference_by_bs = interference_by_bs
 
         self._x = x
