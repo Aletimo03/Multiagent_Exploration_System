@@ -6,9 +6,9 @@ AREA_LENGTH = 1000  # in meters
 NUM_OF_SAMPLES = 25  # number of points each agent generates as potentially new positions (default: 250, test: 25)
 EPSILON = 0.1  # percentage of how the agent moves in the chosen direction
 COMMUNICATION_RADIUS = 200  # of the agent (default: 200)
-DESIRED_COVERAGE_LEVEL = 0.5  # by the user
+DESIRED_COVERAGE_LEVEL = 10  # around 10dB Good coverage, video streaming
 MAX_DISPLACEMENT = 10  # max distance an agent can move from its actual position
-NUM_OF_ITERATIONS = 30 # max num of iterations before the algorithm stops (default: 100, test: 30)
+NUM_OF_ITERATIONS = 10 # max num of iterations before the algorithm stops (default: 100, test: 30)
 MIN_VERTICAL_DISTANCE = 0.15  # in meters
 SENSOR_HEIGHT = 0.15  # in meters
 AGENTS_COUPLING_PENALTY = 0.75
@@ -17,10 +17,12 @@ M = 30  # number of users
 N = 10  # number of agents
 B = 4  # number of base stations
 PENALTY = 1/M  # const for penalty search
-NUM_OF_SIMULATIONS = 3
+NUM_OF_SIMULATIONS = 1
 
 """ Power Spectral Density Noise """
-PSDN = 7.164E-16  # =-174dBm/Hz
+PSDN=4E-21 # Assuming 290K room temperature   PSDN(decibels relative to 1 milliwatt per Hertz)=-174dBm/Hz
+           # calculated as N0=KB(BoltzMann)xT(room temperature)             (7.164E-16  past value using 20log10)
+
 BANDWIDTH = 2000000  # in Hz
 
 """ PATH_GAIN = lambda^2/(4*pi)^2, where lambda = c/f is the wavelength of the signal."""
@@ -28,13 +30,15 @@ PATH_GAIN = 0.0001
 
 """FOR PATH LOSS ESTIMATE USING MCplGen.py snippet"""
 CARRIER_FREQUENCY=2000
-TYPE_OF_SCENARIO="HighriseUrban"
+TYPE_OF_SCENARIO="Urban"
 
 """Altitude of the sensors"""
 ALTITUDE = 50  # in meters
 
 """Transmit Power"""
-TRANSMITTING_POWER = 0.2  # in Watts
+TRANSMITTING_POWER = 0.2  # in Watts,  23dB
+
+BASE_STATION_TRANSMITTING_POWER= 2
 
 
 """SINR penalty multiplier for NLoS conditions"""
