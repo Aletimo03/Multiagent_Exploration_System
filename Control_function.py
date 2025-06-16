@@ -165,6 +165,11 @@ class Control_function:
 
 
     @staticmethod
+    def old_channel_gain(current_sensor,current_user):
+
+     return PATH_GAIN / math.pow(math.dist(current_sensor.get_3D_position(), current_user.get_position() + (0,)), 2)
+
+    @staticmethod
     def LoS_based_channel_gain_(current_sensor, current_user, LoS_state):
         """Return the LoS-based channel gain between agent and user."""
         sensor_pos = current_sensor.get_3D_position()
@@ -184,7 +189,17 @@ class Control_function:
     @staticmethod
     def channel_gain_by_position(p1, p2):
         """Calculates the pathloss (channel gain) between two 3D positions using MCPlGen.
-           Assumes p1 is the UAV position, and its z-coordinate is the altitude.
+           Assumes p1 is the UAV position, and its z-coordinate is the altitude. """
+
+        """
+              # adjusting dimension to avoid errors
+              if len(p1) <= 2:
+                  p1 += (0,)
+              if len(p2) <= 2:
+                  p2 += (0,)
+              return PATH_GAIN / math.pow(math.dist(p1, p2), 2)
+
+              """
 
         d_ij = calculate_distance_3d(p1, p2)
         z_uav = p1[2]  # UAV altitude from p1
@@ -197,15 +212,6 @@ class Control_function:
             average=True,
             state=None
         )
-
-        using this implementation causes explaration levels to drop
-         """
-        # adjusting dimension to avoid errors
-        if len(p1) <= 2:
-            p1 += (0,)
-        if len(p2) <= 2:
-            p2 += (0,)
-        return PATH_GAIN / math.pow(math.dist(p1, p2), 2)
 
     # Returns the total power of interferences that disturbs the signal between sensor and user
     def __interference_power(self, sensor, user, other_agents):
@@ -223,7 +229,7 @@ class Control_function:
                 ):
                     continue
                 else:
-                    interference_power += self.channel_gain(other_sensor, user) * other_sensor.transmitting_power
+                    interference_power += self.channel_gain_by_position(other_sensor.get_3D_position(), user.get_3D_position()) * other_sensor.transmitting_power
         return interference_power
 
     # Return the total power of interferences that disturbs the sensor's signal in some point of space
@@ -302,14 +308,16 @@ class Control_function:
                 if user.is_covered or eval_all_users:
                     if eval_LoS:
                       updated_state = LoS_matrix[sensor.id][user.id]
-                      sinr = (self.LoS_based_channel_gain_(sensor, user,updated_state) * sensor.transmitting_power) / (
+                      sinr = (self.channel_gain_by_position(sensor.get_3D_position(),user.get_3D_position()) * sensor.transmitting_power) / (
                             interference_powers[sensor.id][user.id] + PSDN * BANDWIDTH )
 
-                    #  print("State:" ,updated_state,"with sinr: ", sinr )
+                      # test add if sinr > coverage
+
+                     # print("SINR", sinr)
 
                     # SNIR probabilistic GAIN
                     else:
-                      sinr = (self.channel_gain(sensor, user) * sensor.transmitting_power) / (
+                      sinr = (self.channel_gain_by_position(sensor.get_3D_position(),user.get_3D_position()) * sensor.transmitting_power) / (
                                 interference_powers[sensor.id][user.id] + PSDN * BANDWIDTH)
 
 
@@ -330,11 +338,11 @@ class Control_function:
 
         total_SINR_per_user = [max(col) for col in zip(*SINR_matrix)]
         for user in self.users:
-          if user.is_active: # non metto il check perchè il goal lo trova con gli user attivi al momento e non sa qualli stanno per scomparire
+          if user.is_active:
             if total_SINR_per_user[user.id] - user.desired_coverage_level > 0 and (self.backhaul_network_available or is_graph_connected): # lazy evaluation
                 RCR_active_users += 1
 
-        return RCR_active_users / self.__get__users()  # TODO riguardare se era num covered user or not
+        return RCR_active_users / self.__get__active_users()  # TODO si puo togliere la frazione e tenere il rcr
 
     # Returns the RCR value after the agents' movement, not used in control function
     def RCR_after_move(self):
@@ -910,7 +918,7 @@ class Control_function:
     def get_starting_LoS_prob(self,scenario,f,h,d_ij):
         # Parameter sets
         freq700MHz = {
-            'Suburban': {'a': 4.879, 'b': 0.4290, 'mu1': 0.0, 'mu2': 18, 'a1': 11.53, 'b1': 0.06, 'a2': 26.53,
+            'SubUrban': {'a': 4.879, 'b': 0.4290, 'mu1': 0.0, 'mu2': 18, 'a1': 11.53, 'b1': 0.06, 'a2': 26.53,
                          'b2': 0.03},
             'Urban': {'a': 9.611, 'b': 0.1580, 'mu1': 0.6, 'mu2': 17, 'a1': 10.98, 'b1': 0.05, 'a2': 23.31, 'b2': 0.03},
             'DenseUrban': {'a': 12.081, 'b': 0.1139, 'mu1': 1.0, 'mu2': 20, 'a1': 9.64, 'b1': 0.04, 'a2': 30.83,
@@ -920,7 +928,7 @@ class Control_function:
         }
 
         freq2GHz = {
-            'Suburban': {'a': 4.879, 'b': 0.4290, 'mu1': 0.1, 'mu2': 21, 'a1': 11.25, 'b1': 0.06, 'a2': 32.17,
+            'SubUrban': {'a': 4.879, 'b': 0.4290, 'mu1': 0.1, 'mu2': 21, 'a1': 11.25, 'b1': 0.06, 'a2': 32.17,
                          'b2': 0.03},
             'Urban': {'a': 9.611, 'b': 0.1580, 'mu1': 1.0, 'mu2': 20, 'a1': 10.39, 'b1': 0.05, 'a2': 29.60, 'b2': 0.03},
             'DenseUrban': {'a': 12.081, 'b': 0.1139, 'mu1': 1.6, 'mu2': 23, 'a1': 8.96, 'b1': 0.04, 'a2': 35.97,
@@ -930,7 +938,7 @@ class Control_function:
         }
 
         freq5_8GHz = {
-            'Suburban': {'a': 4.879, 'b': 0.4290, 'mu1': 0.2, 'mu2': 24, 'a1': 11.04, 'b1': 0.06, 'a2': 39.56,
+            'SubUrban': {'a': 4.879, 'b': 0.4290, 'mu1': 0.2, 'mu2': 24, 'a1': 11.04, 'b1': 0.06, 'a2': 39.56,
                          'b2': 0.04},
             'Urban': {'a': 9.611, 'b': 0.1580, 'mu1': 1.2, 'mu2': 23, 'a1': 10.67, 'b1': 0.05, 'a2': 35.85, 'b2': 0.04},
             'DenseUrban': {'a': 12.081, 'b': 0.1139, 'mu1': 1.8, 'mu2': 26, 'a1': 9.21, 'b1': 0.04, 'a2': 40.86,
