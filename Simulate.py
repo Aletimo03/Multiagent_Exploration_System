@@ -2,6 +2,7 @@ import os
 import pickle
 import random
 
+# from scipy.stats import exponweib_gen
 
 from Plots import plot_area, plot_coverage, plot_exploration
 from Control_function import Control_function
@@ -15,7 +16,7 @@ from Control_function_config_DTO import Control_function_DTO as DTO
 from multiprocessing import Process
 from multiprocessing import Manager
 
-def simulate(type_of_search, expl_weight, num_of_iter, deserialize, use_expl, use_bs, use_custom_prob=False):
+def simulate(type_of_search, expl_weight, num_of_iter, deserialize, use_expl, use_bs,experiment_id, use_custom_prob=False):
     # -----------------------------------------------
     #     1° step: simulation's environment creation
     # -----------------------------------------------
@@ -28,10 +29,10 @@ def simulate(type_of_search, expl_weight, num_of_iter, deserialize, use_expl, us
 
     base_stations = []
     if use_bs:
-        b1 = Base_station(area, COMMUNICATION_RADIUS, 1 / 4 * area.width, 1 / 4 * area.length, TRANSMITTING_POWER)
-        b2 = Base_station(area, COMMUNICATION_RADIUS, 1 / 4 * area.width, 3 / 4 * area.length, TRANSMITTING_POWER)
-        b3 = Base_station(area, COMMUNICATION_RADIUS, 3 / 4 * area.width, 1 / 4 * area.length, TRANSMITTING_POWER)
-        b4 = Base_station(area, COMMUNICATION_RADIUS, 3 / 4 * area.width, 3 / 4 * area.length, TRANSMITTING_POWER)
+        b1 = Base_station(area, COMMUNICATION_RADIUS, 1 / 4 * area.width, 1 / 4 * area.length,TYPE_OF_SCENARIO)
+        b2 = Base_station(area, COMMUNICATION_RADIUS, 1 / 4 * area.width, 3 / 4 * area.length,TYPE_OF_SCENARIO)
+        b3 = Base_station(area, COMMUNICATION_RADIUS, 3 / 4 * area.width, 1 / 4 * area.length,TYPE_OF_SCENARIO)
+        b4 = Base_station(area, COMMUNICATION_RADIUS, 3 / 4 * area.width, 3 / 4 * area.length,TYPE_OF_SCENARIO)
         base_stations = [b1, b2, b3, b4]
 
     users = [User(area, DESIRED_COVERAGE_LEVEL, deserialize) for _ in range(M)]
@@ -66,13 +67,18 @@ def simulate(type_of_search, expl_weight, num_of_iter, deserialize, use_expl, us
     )
     cf = Control_function(area, base_stations, agents, users, dto)
 
+
+   # print("INITIALIZE LOS MATRIX")
+
     cf.initialize_LoS_matrix_from_probability()
+
+   # print("FINISHED TO INITIALIZE LOS MATRIX")
 
 
     # starting points for coverage & exploration levels
-   # print("[BEFORE]first rcr after move ")
+    print("[BEFORE]first rcr after move ")
     current_reward = cf.RCR_after_move()
-   # print("[AFTER]first rcr after move ")
+    print("[AFTER]first rcr after move ")
     coverage_levels.append(current_reward)
 
     if use_expl:
@@ -161,24 +167,44 @@ def simulate(type_of_search, expl_weight, num_of_iter, deserialize, use_expl, us
     if type_of_search == "systematic mixed":
         type_of_search = "mixed"
 
-    # saving results with pickle files
+
+    print("SIM with desired coverage level:", DESIRED_COVERAGE_LEVEL)
+
     print("Saving simulation data...")
-    os.makedirs(os.path.normpath(f'Simulations output/custom prob {use_custom_prob}/{num_of_iter}'), exist_ok=True)
-    # noinspection PyTypeChecker
-    pickle.dump(time_elapsed, open(f"Simulations output/custom prob {use_custom_prob}/{num_of_iter}/time_elapsed.p", "wb"))
-    # noinspection PyTypeChecker
-    pickle.dump(coverage_levels, open(f'Simulations output/custom prob {use_custom_prob}/{num_of_iter}/coverages.p', 'wb'))
+
+    # Determine base path depending on experiment
+    if experiment_id == 1:
+        exp_path = os.path.normpath(f"Experiment results/experiment1/expl {use_expl}/BS {use_bs}/{num_of_iter}")
+    elif experiment_id == 2:
+        exp_path = os.path.normpath(f"Experiment results/experiment2/{type_of_search} search/{num_of_iter}")
+    elif experiment_id == 3:
+        exp_path = os.path.normpath(f"Experiment results/experiment3/custom prob {use_custom_prob}/{num_of_iter}")
+    else:
+        raise ValueError(f"Unknown experiment_id: {experiment_id}")
+
+    # Create directory and save results
+    os.makedirs(exp_path, exist_ok=True)
+
+    with open(os.path.join(exp_path, "time_elapsed.p"), "wb") as f:
+        pickle.dump(time_elapsed, f)
+
+    with open(os.path.join(exp_path, "coverages.p"), "wb") as f:
+        pickle.dump(coverage_levels, f)
+
     if use_expl:
-        # noinspection PyTypeChecker
-        pickle.dump(exploration_levels, open(f'Simulations output/custom prob {use_custom_prob}/{num_of_iter}/exploration_levels.p', 'wb'))
+        with open(os.path.join(exp_path, "exploration_levels.p"), "wb") as f:
+            pickle.dump(exploration_levels, f)
 
     # plotting results
     print("Plotting results...")
-    plot_area(area, users, base_stations, agents, type_of_search, num_of_iter, prob_matrix_history, expl_weight, use_expl=use_expl, use_bs=use_bs, use_custom_prob=use_custom_prob)
-    plot_coverage(coverage_levels, time_elapsed, type_of_search, expl_weight, num_of_iter, use_expl, use_bs, use_custom_prob)
-    if use_expl:
-        plot_exploration(exploration_levels, time_elapsed, type_of_search, expl_weight, num_of_iter, use_bs, use_custom_prob)
+    plot_area(area, users, base_stations, agents, type_of_search, num_of_iter, prob_matrix_history, expl_weight,
+              use_expl=use_expl, use_bs=use_bs, use_custom_prob=use_custom_prob, path=exp_path)
+    plot_coverage(coverage_levels, time_elapsed, type_of_search, expl_weight, num_of_iter, use_expl, use_bs,
+                  use_custom_prob, path=exp_path)
 
+    if use_expl:
+        plot_exploration(exploration_levels, time_elapsed, type_of_search, expl_weight, num_of_iter, use_bs,
+                         use_custom_prob, path=exp_path)
 
 def concurrent_find_goal_point(cf, agent, t, output_dict):
     other_agents = []

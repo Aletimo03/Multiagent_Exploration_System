@@ -28,7 +28,7 @@ colors = [
     #, 'mediumorchid'
           ]
 
-def plot_area(area, users, base_stations, agents, type_of_search, num_of_iter, prob_matrix_history, expl_weight, use_expl, use_bs, use_custom_prob, show_plot=False):
+def plot_area(area, users, base_stations, agents, type_of_search, num_of_iter, prob_matrix_history, expl_weight, use_expl, use_bs, use_custom_prob, show_plot=False, path=None):
     fig, ax = plt.subplots()
     plt.axis('square')
     plt.subplots_adjust(left=0.1, right=0.9, bottom=0.1, top=0.8)
@@ -113,7 +113,9 @@ def plot_area(area, users, base_stations, agents, type_of_search, num_of_iter, p
          if user.is_active_at_time_step(i):
             user_scatter.append(plt.scatter(xu, yu, color=color, marker=marker, zorder=2))
          else:
+            # print("[PLOT]", user.id, "is not active at time step:", i)
              user_scatter.append(plt.scatter(xu,yu,color="gray", marker=marker,zorder=2 ))
+
 
         # Draw agent positions
         for agent, trajectory in zip(agents, agents_trajectories):
@@ -122,8 +124,8 @@ def plot_area(area, users, base_stations, agents, type_of_search, num_of_iter, p
 
         # Save initial frame image (only if not using exploration)
         if i == 0 and not use_expl:
-            plt.savefig(f'Simulations output/custom prob {use_custom_prob}/{num_of_iter}/initial coverage.png')
-
+            os.makedirs(path, exist_ok=True)  # ensure directory exists
+            plt.savefig(os.path.join(path, "initial coverage.png"))
         # Draw final trajectory lines and save final frame
         if i == len(agents_trajectories[0]) - 1 and not use_expl:
             for line, trajectory in zip(agents_lines, agents_trajectories):
@@ -136,7 +138,9 @@ def plot_area(area, users, base_stations, agents, type_of_search, num_of_iter, p
                 y_coord = [coord[1] for coord in trajectory[:i + 1]]
                 line.set_data(x_coord, y_coord)
 
-            plt.savefig(f'Simulations output/custom prob {use_custom_prob}/{num_of_iter}/final coverage.png')
+            os.makedirs(path, exist_ok=True)  # ensure directory exists
+
+            plt.savefig(os.path.join(path, "final coverage.png"))
 
         return agents_lines + user_lines
 
@@ -152,7 +156,8 @@ def plot_area(area, users, base_stations, agents, type_of_search, num_of_iter, p
         animate(i)
         # used for the final coverage image
         if i == 0:
-            plt.savefig(f'Simulations output/custom prob {use_custom_prob}/{num_of_iter}/initial coverage.png')
+            os.makedirs(path, exist_ok=True)  # ensure directory exists
+            plt.savefig(os.path.join(path, "initial coverage.png"))
 
         if i == len(agents_trajectories[0]) -1:
             for line, trajectory in zip(agents_lines, agents_trajectories):
@@ -165,8 +170,8 @@ def plot_area(area, users, base_stations, agents, type_of_search, num_of_iter, p
                 y_coord = [coord[1] for coord in trajectory[:i + 1]]
                 line.set_data(x_coord, y_coord)
 
-            plt.savefig(f'Simulations output/custom prob {use_custom_prob}/{num_of_iter}/final coverage.png')
-
+            os.makedirs(path, exist_ok=True)  # ensure directory exists
+            plt.savefig(os.path.join(path, "final coverage.png"))
         # USE FOR DEBUG
         #os.makedirs(os.path.dirname(f'Simulations output/{type_of_search} search/{expl_weight} weight/expl {use_expl}/BS {use_bs}/{num_of_iter}/animation frames/'), exist_ok=True)
         #plt.savefig(f'Simulations output/{type_of_search} search/{expl_weight} weight/expl {use_expl}/BS {use_bs}/{num_of_iter}/animation frames/frame_{i}.png')
@@ -174,44 +179,43 @@ def plot_area(area, users, base_stations, agents, type_of_search, num_of_iter, p
         return agents_lines + user_lines
 
     ani = animation.FuncAnimation(fig, animate, init_func=init, frames=len(agents_trajectories[0]), interval=200, blit=True)
-    os.makedirs(os.path.dirname(f'Simulations output/custom prob {use_custom_prob}/{num_of_iter}'), exist_ok=True)
-    writer = FFMpegWriter(fps=20)
-    ani.save(f'Simulations output/custom prob {use_custom_prob}/{num_of_iter}/animation.mp4', writer=writer)
+    os.makedirs(path, exist_ok=True)
+    writer = FFMpegWriter(fps=5) #it was fps=20
+    ani.save(os.path.join(path, "animation.mp4"), writer=writer)
 
     if use_expl:
         ani_prob = animation.FuncAnimation(fig, animate_prob, init_func=init_prob, frames=len(agents_trajectories[0]), interval=200, blit=True)
-        writer_prob = FFMpegWriter(fps=20)
-        ani_prob.save(f'Simulations output/custom prob {use_custom_prob}/{num_of_iter}/animation_prob.mp4',
-                      writer=writer_prob)
+        writer_prob = FFMpegWriter(fps=5) #it was fps=20
+        ani_prob.save(os.path.join(path, "animation.mp4"), writer=writer)
 
     if show_plot:
         plt.show()
     plt.close()
 
 
-def plot_coverage(coverages, time_elapsed, type_of_search, expl_weight, num_of_iter, use_expl, use_bs, use_custom_prob, show_plot=False):
+def plot_coverage(coverages, time_elapsed, type_of_search, expl_weight, num_of_iter, use_expl, use_bs, use_custom_prob, show_plot=False, path=None):
     plt.subplots()
     plt.plot(range(len(coverages)), coverages)
     plt.xlabel('Iterations')
     plt.ylabel(f'Coverage ({type_of_search})')
     plt.text(1.1, 1.1, f'Time elapsed: {time_elapsed}', horizontalalignment='right', verticalalignment='top',
              transform=plt.gca().transAxes)
-    os.makedirs(os.path.dirname(f'Simulations output/custom prob {use_custom_prob}/{num_of_iter}/'), exist_ok=True)
-    plt.savefig(f'Simulations output/custom prob {use_custom_prob}/{num_of_iter}/coverage_graphic.png')
+    os.makedirs(path, exist_ok=True)  # ensure directory exists
+    plt.savefig(os.path.join(path, "coverage_graphic.png"))
     if show_plot:
         plt.show()
     plt.close()
 
 
-def plot_exploration(exploration_levels, time_elapsed, type_of_search, expl_weight, num_of_iter, use_bs, use_custom_prob, show_plot=False):
+def plot_exploration(exploration_levels, time_elapsed, type_of_search, expl_weight, num_of_iter, use_bs, use_custom_prob, show_plot=False, path=None):
     plt.subplots()
     plt.plot(range(len(exploration_levels)), exploration_levels)
     plt.xlabel('Iterations')
     plt.ylabel(f'Exploration ({type_of_search})')
     plt.text(1.1, 1.1, f'Time elapsed: {time_elapsed}', horizontalalignment='right', verticalalignment='top',
              transform=plt.gca().transAxes)
-    os.makedirs(os.path.dirname(f'Simulations output/custom prob {use_custom_prob}/{num_of_iter}/'), exist_ok=True)
-    plt.savefig(f'Simulations output/custom prob {use_custom_prob}/{num_of_iter}/exploration_graphic.png')
+    os.makedirs(path, exist_ok=True)  # ensure directory exists
+    plt.savefig(os.path.join(path, "exploration_graphic.png"))
     if show_plot:
         plt.show()
     plt.close()

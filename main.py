@@ -22,10 +22,10 @@ def experiment1():
                 for expl_weight in expl_weights:
                     for expl  in [True, False]:
                         for BS in [True, False]:
-                            print(f'----- Starting simulation [{type_of_search}-{expl_weight}-no expl] : {i} @ {date.now()}-----')
+                            print(f'----- Starting simulation [{type_of_search}-{expl_weight}-{expl}--BS {BS}] : {i} @ {date.now()}-----')
                             with open("logs/output_log.txt", 'a') as f:
-                                f.write(f'----- Starting simulation [{type_of_search}-{expl_weight}-no expl] : {i} @ {date.now()}-----\n')
-                            simulate(type_of_search, expl_weight, i, deserialize, use_expl=expl, use_bs=BS)
+                                f.write(f'----- Starting simulation [{type_of_search}-{expl_weight}-{expl}--BS {BS}] : {i} @ {date.now()}-----\n')
+                            simulate(type_of_search, expl_weight, i, deserialize, use_expl=expl, use_bs=BS, experiment_id=1)
                             Sensor.id = 0
                             User.id = 0
                             deserialize = True
@@ -43,7 +43,7 @@ def experiment1():
 
 def experiment2():
     try:
-        types_of_search = ["systematic", "local", "annealing forward", "annealing reverse", "penalty"]
+        types_of_search = ["systematic"] #, "local", "annealing forward", "annealing reverse", "penalty"]
         expl_weights = ["constant"]
 
         print(f"Simulations begin: {date.now()}\n")
@@ -58,7 +58,7 @@ def experiment2():
                     with open("logs/output_log.txt", 'a') as f:
                         f.write(f'----- Starting simulation [{type_of_search}-{expl_weight}] : {i} @ {date.now()}-----\n')
 
-                    simulate(type_of_search, expl_weight, i, deserialize, use_expl=True, use_bs=True)
+                    simulate(type_of_search, expl_weight, i, deserialize, use_expl=True, use_bs=True,experiment_id=2)
                     Sensor.id = 0
                     User.id = 0
                     deserialize = True
@@ -76,13 +76,13 @@ def experiment2():
 def experiment3():
     try:
         for i in range(NUM_OF_SIMULATIONS):
-            deserialize = True # try true for debug ( i want to check if output changes efffectively)
-            for prob in [False]:  #add FALSE
+            deserialize = False # try true for debug ( i want to check if output changes efffectively)
+            for prob in [False,True]:  #add FALSE
                 print(f'----- Starting simulation [local-constant-custom prob {prob}] : {i} @ {date.now()}-----')
                 with open("logs/output_log.txt", 'a') as f:
                     f.write(f'----- Starting simulation [local-constant-custom prob {prob}] : {i} @ {date.now()}-----\n')
 
-                simulate("local", "constant", i, deserialize, use_expl=True, use_bs=True, use_custom_prob=prob)
+                simulate("local", "constant", i, deserialize, use_expl=True, use_bs=True, use_custom_prob=prob, experiment_id=3)
                 Sensor.id = 0
                 User.id = 0
                 deserialize = True
@@ -98,5 +98,6 @@ def experiment3():
         raise e
 
 if __name__ == '__main__':
-
-    experiment3()
+    #experiment1()
+    experiment2()
+    #experiment3()
