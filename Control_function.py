@@ -169,37 +169,30 @@ class Control_function:
 
      return PATH_GAIN / math.pow(math.dist(current_sensor.get_3D_position(), current_user.get_position() + (0,)), 2)
 
-    @staticmethod
-    def LoS_based_channel_gain_(current_sensor, current_user, LoS_state):
-        """Return the LoS-based channel gain between agent and user."""
-        sensor_pos = current_sensor.get_3D_position()
-        user_pos = current_user.get_3D_position()
-        d_ij = calculate_distance_3d(sensor_pos, user_pos)
-        z_uav = sensor_pos[2]  # UAV altitude
 
-        return calculate_pathloss(
+    def LoS_based_channel_gain_(self,current_sensor, current_user, LoS_state):
+        """Return the LoS-based channel gain between agent and user."""
+        d_ij,prev_d,d_tr=self.__get__MCplGen_parameters(current_user,current_sensor)
+
+        z_uav = current_sensor.get_z() # UAV altitude
+
+        pathloss,_=calculate_pathloss(
             scenario=TYPE_OF_SCENARIO,
             frequency=CARRIER_FREQUENCY,
             altitude=z_uav,
             distance_ij=d_ij,
+            prev_distance=prev_d,
+            distance_tr=d_tr,
             average=False,
             state=LoS_state
         )
+
+        return pathloss
 
     @staticmethod
     def channel_gain_by_position(p1, p2):
         """Calculates the pathloss (channel gain) between two 3D positions using MCPlGen.
            Assumes p1 is the UAV position, and its z-coordinate is the altitude. """
-
-        """
-              # adjusting dimension to avoid errors
-              if len(p1) <= 2:
-                  p1 += (0,)
-              if len(p2) <= 2:
-                  p2 += (0,)
-              return PATH_GAIN / math.pow(math.dist(p1, p2), 2)
-
-              """
 
         d_ij = calculate_distance_3d(p1, p2)
         z_uav = p1[2]  # UAV altitude from p1
@@ -254,7 +247,7 @@ class Control_function:
 
 
 
-    def __update_LoS_matrix(self, eval_LoS=False,create_matrix=False):
+    def __update_LoS_matrix(self):
         """
         Returns a matrix [sensor_id][user_id] with 'LoS' or 'NLoS' values.
         If eval_LoS=True, updates the Markov state using actual motion-based transition.
@@ -273,9 +266,9 @@ class Control_function:
                 # Distance calculations
                 d_ij, prev_d, d_tr = self.__get__MCplGen_parameters(user, sensor)
 
-                if eval_LoS:
-                    # Apply your path loss generator and get new state
-                    _, state = MCPlGen(
+
+                # Apply your path loss generator and get new state
+                _, state = MCPlGen(
                         scenario=TYPE_OF_SCENARIO,  # You may generalize this
                         f=CARRIER_FREQUENCY,  # Frequency in MHz
                         h=z_uav,  # UAV altitude
@@ -287,10 +280,10 @@ class Control_function:
                     )
 
                 new_state = 'LoS' if state == 1 else 'NLoS'
-                #if new_state != prev_state:
-                  #  print(f"User {user.id} transitioned to {new_state} state in respect to {sensor.id}")
+               # if new_state != prev_state:
+                #   print(f"From {prev_state} User {user.id} transitioned to {new_state} state in respect to {sensor.id}")
                # else:
-                   # print(f"User {user.id} remains in {new_state} state in respect to {sensor.id}")
+                #    print(f"From {prev_state }User {user.id} remains in {new_state} state in respect to {sensor.id}")
 
                 self.__LoS_matrix[sensor.id][user.id] = new_state
 
@@ -300,20 +293,22 @@ class Control_function:
     def __SINR(self, interference_powers, eval_all_users=False,eval_LoS=False):
         SINR_matrix = numpy.zeros((len(self.agents) + len(self.base_stations), len(self.users)))
 
-        LoS_matrix = self.__update_LoS_matrix(eval_LoS) if eval_LoS else None
+        if eval_LoS:
+            print("UPDATE LOS MATRIX")
+            self.__update_LoS_matrix()
+
+        LoS_matrix=self.__LoS_matrix
 
         for sensor in self.agents + self.base_stations:
             for user in self.users:
-            #  if user.is_active: TO DO LATER
                 if user.is_covered or eval_all_users:
                     if eval_LoS:
-                      updated_state = LoS_matrix[sensor.id][user.id]
-                      sinr = (self.channel_gain_by_position(sensor.get_3D_position(),user.get_3D_position()) * sensor.transmitting_power) / (
+                      state = LoS_matrix[sensor.id][user.id]
+                      sinr = (self.LoS_based_channel_gain_(sensor,user,state) * sensor.transmitting_power) / (
                             interference_powers[sensor.id][user.id] + PSDN * BANDWIDTH )
 
-                      # test add if sinr > coverage
-
-                     # print("SINR", sinr)
+                    #  if sinr > DESIRED_COVERAGE_LEVEL:
+                    #   print("SINR", sinr)
 
                     # SNIR probabilistic GAIN
                     else:
@@ -322,6 +317,9 @@ class Control_function:
 
 
                     SINR_matrix[sensor.id][user.id] = sinr
+
+        if eval_LoS:
+            self.__update_LoS_matrix()
 
         return SINR_matrix
 
@@ -915,7 +913,7 @@ class Control_function:
         return d_ij,prev_d,d_tr
 
 
-    def get_starting_LoS_prob(self,scenario,f,h,d_ij):
+    def get_starting_LoS_prob(self,scenario,f,h,d_ij): # not used anymore
         # Parameter sets
         freq700MHz = {
             'SubUrban': {'a': 4.879, 'b': 0.4290, 'mu1': 0.0, 'mu2': 18, 'a1': 11.53, 'b1': 0.06, 'a2': 26.53,
@@ -971,28 +969,57 @@ class Control_function:
 
         return p1
 
-    def initialize_LoS_matrix_from_probability(self):
+    def initialize_LoS_matrix(self):
         """
-        Populates the initially empty __LoS_matrix with 'LoS' or 'NLoS' based on elevation angle probability.
+        Initializes the __LoS_matrix using the los_probability() function
+        based on elevation angle and scenario-specific parameters.
         """
         for sensor in self.agents + self.base_stations:
             for user in self.users:
                 d_ij, _, _ = self.__get__MCplGen_parameters(user, sensor)
                 _, _, h = sensor.get_3D_position()
 
-                p_los = self.get_starting_LoS_prob(
-                    scenario=TYPE_OF_SCENARIO,
-                    f=CARRIER_FREQUENCY,
-                    h=h,
-                    d_ij=d_ij
-                )
+                # Calculate elevation angle (in degrees)
+                theta_rad = np.arcsin(h / d_ij)
+                theta_deg = np.degrees(theta_rad)
 
-                # Probabilistic decision: you can use random or threshold
-                state = 'LoS' if np.random.rand() < p_los else 'NLoS'
-               # print(f"User {user.id } has {p_los} probability of being in LoS in respect to {sensor.id}")
+                # Select 'a' and 'b' based on scenario and frequency
+                f = CARRIER_FREQUENCY
+                scenario = TYPE_OF_SCENARIO
+
+                if f < 1000:
+                    a_b_params = {
+                        'SubUrban': (4.879, 0.4290),
+                        'Urban': (9.611, 0.1580),
+                        'DenseUrban': (12.081, 0.1139),
+                        'HighriseUrban': (27.230, 0.0797)
+                    }
+                elif f <= 3000:
+                    a_b_params = {
+                        'SubUrban': (4.879, 0.4290),
+                        'Urban': (9.611, 0.1580),
+                        'DenseUrban': (12.081, 0.1139),
+                        'HighriseUrban': (27.230, 0.0797)
+                    }
+                else:
+                    a_b_params = {
+                        'SubUrban': (4.879, 0.4290),
+                        'Urban': (9.611, 0.1580),
+                        'DenseUrban': (12.081, 0.1139),
+                        'HighriseUrban': (27.230, 0.0797)
+                    }
+
+                a, b = a_b_params[scenario]
+
+                # Compute LoS probability using helper
+                p_los = los_probability(theta_deg, a, b)
+
+                # Stochastically assign LoS or NLoS state
+              #  print("p_los:", p_los)
+                state = 1 if np.random.rand() < p_los else 2
+             #   print("state:", sensor.id, user.id  , state)
 
                 self.__LoS_matrix[sensor.id][user.id] = state
-               # print(f"User {user.id} has {state} state in respect to {sensor.id} after being inizialized")
 
     def update_users(self,users):
         self.users=users
