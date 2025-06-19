@@ -186,7 +186,7 @@ def plot_area(area, users, base_stations, agents, type_of_search, num_of_iter, p
     if use_expl:
         ani_prob = animation.FuncAnimation(fig, animate_prob, init_func=init_prob, frames=len(agents_trajectories[0]), interval=200, blit=True)
         writer_prob = FFMpegWriter(fps=5) #it was fps=20
-        ani_prob.save(os.path.join(path, "animation.mp4"), writer=writer)
+        ani_prob.save(os.path.join(path, "animation_prob.mp4"), writer=writer)
 
     if show_plot:
         plt.show()
