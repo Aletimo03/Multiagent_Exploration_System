@@ -26,7 +26,11 @@ def calculate_pathloss(scenario, frequency, altitude, distance_ij, distance_tr=N
 
 
 def los_probability(theta_deg, a, b):
+
+  #  print (theta_deg)
+  #  print("plos:" , 1.0 / (1 + a * np.exp(-b * (theta_deg - a)))) if  (1.0 / (1 + a * np.exp(-b * (theta_deg - a))))>0.5 else None
     return 1.0 / (1 + a * np.exp(-b * (theta_deg - a)))
+
 
 def MCPlGen(scenario, f, h, d_ij, d_tr, prev_d,state, average=False):
   #inputs
@@ -87,63 +91,57 @@ def MCPlGen(scenario, f, h, d_ij, d_tr, prev_d,state, average=False):
     p2 = 1 - p1
     kappa = kappa0 * np.tan(theta_rad)
 
+    landa_signed= 1 / kappa * (1 - p1)
+
     # Get LoS and NLoS mean losses
     mu1 = pars['mu1']
     mu2 = pars['mu2']
-    sigma1 = pars['a1'] * np.exp(-pars['b1'] * theta_rad)
-    sigma2 = pars['a2'] * np.exp(-pars['b2'] * theta_rad)
+    sigma1 = 0.01 #  pars['a1'] * np.exp(-pars['b1'] * theta_rad)
+    sigma2 = 0.1 #pars['a2'] * np.exp(-pars['b2'] * theta_rad)
 
     if average:
         # Use expected value
         eta_avg = p1 * mu1 + p2 * mu2
+      #  print(eta_avg)
         totPL = fspl + eta_avg
-        totPL_linear = 10 ** (-totPL/10)
-        return totPL_linear
+        tot_gain = 10 ** (-totPL/10)
+        return tot_gain
+
     else:
-        # Rate matrix
-        q11 = -1 / kappa
-        q12 = 1 / kappa
-        q21 = p1 / (p2 * kappa)
-        q22 = -q21
-        Q = np.array([[q11, q12], [q21, q22]])
+        delta_d = abs(d_ij - prev_d) if prev_d is not None else 0
 
-        # Initial state
+        # Transition logic
+        if state == "LoS":
+            p11 = p1 + (1 - p1) * np.exp(-landa_signed * delta_d)
+            # p11 is prob of staying in the state 1 ( LoS)
 
-        if state == 1:
-            lam = -Q[0, 0]
-            next_state = 2
+
+           # if p11<0.8:
+            #    p11=0.8
+
+                                                                  # in the Markov chain
+            next_state = 1 if np.random.rand() < p11 else 2
+         #   print("p1:",p1 , "p11: ", p11 , "next state:", next_state)
             sigma = sigma1
             mu = mu1
         else:
-            lam = -Q[1, 1]
-            next_state = 1
+            p22 = p2 + (1 - p2) * np.exp(-landa_signed * delta_d)
+                                                                  # p22 is prob of staying in the state 2 (nLoS)
+                                                                  # in the Markov chain
+
+          #  if p22>0.2:
+          #      p22=0.2
+
+            next_state = 2 if np.random.rand() < p22 else 1
+           # print("p2:",p2 , "p22: ", p22 , "next state:", next_state)
             sigma = sigma2
-            mu = mu2
+            mu = mu2 # secondo me troppo cattivo
 
         eta = mu + sigma * np.random.randn()
         totPL = fspl + eta
-        totPL_linear = 10 ** (-totPL / 10)
+        tot_gain = 10 ** (-totPL / 10)
 
-        # Holding distance
-        if prev_d is not None and d_tr is not None:  # to just see the totPL_linear and not updating the LoS state
-         d_hold = np.random.exponential(1 / lam)
-         delta_d = abs(d_ij - prev_d)
-         check_dist = max(d_tr, delta_d)
-
-
-     #    print("DELTA D AND CHECK DIST:",delta_d,check_dist)
-         if (delta_d == 0 and check_dist == 0) or (check_dist >= d_hold):
-            state = 1  if np.random.rand() < p1 else 2
-
-       #  if (delta_d== 0 and check_dist==0):
-       #   print ("start of the simulation with LoS probabilit:",p1) #at the start of the simulations
-
-       #  if check_dist >= d_hold:
-        #    state = 1 # next_state
-
-         return totPL_linear, state
-        else:
-            return totPL_linear
+        return tot_gain, next_state
 
 
 if __name__ == "__main__":
@@ -155,8 +153,16 @@ if __name__ == "__main__":
 
  # Averaged
  avgPL = MCPlGen('Urban', 2e3, 50, d_ij, d_tr, prev_d,1, average=True)
- print(f"Averaged Path Loss: {avgPL:.12f} dB")
+ print(f"GAIN from Averaged Path Loss: {avgPL:.12f} ")
 
  # Stochastic
  stochPL, state = MCPlGen('Urban', 2e3, 0.5, d_ij, d_tr, prev_d,2)
- print(f"Stochastic Path Loss: {stochPL:.12f} dB | State: {state}")
+ print(f"GAIN (from Stochastic Path Loss): {stochPL:.12f}  | State: {state}")
+
+ # Stochastic
+ stochPL, state = MCPlGen('Urban', 2e3, 0.5, d_ij, d_tr, prev_d, 2)
+ print(f"GAIN (from Stochastic Path Loss): {stochPL:.12f}  | State: {state}")
+
+ # Stochastic
+ stochPL, state = MCPlGen('Urban', 2e3, 0.5, d_ij, d_tr, prev_d, 2)
+ print(f"GAIN (from Stochastic Path Loss): {stochPL:.12f}  | State: {state}")
