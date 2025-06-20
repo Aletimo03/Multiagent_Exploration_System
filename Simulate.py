@@ -68,11 +68,11 @@ def simulate(type_of_search, expl_weight, num_of_iter, deserialize, use_expl, us
     cf = Control_function(area, base_stations, agents, users, dto)
 
 
-   # print("INITIALIZE LOS MATRIX")
+    print("INITIALIZE LOS MATRIX")
 
-    cf.initialize_LoS_matrix_from_probability()
+    cf.initialize_LoS_matrix()
 
-   # print("FINISHED TO INITIALIZE LOS MATRIX")
+    print("FINISHED TO INITIALIZE LOS MATRIX")
 
 
     # starting points for coverage & exploration levels

@@ -180,20 +180,20 @@ def plot_area(area, users, base_stations, agents, type_of_search, num_of_iter, p
 
     ani = animation.FuncAnimation(fig, animate, init_func=init, frames=len(agents_trajectories[0]), interval=200, blit=True)
     os.makedirs(path, exist_ok=True)
-    writer = FFMpegWriter(fps=5) #it was fps=20
+    writer = FFMpegWriter(fps=15) #it was fps=20
     ani.save(os.path.join(path, "animation.mp4"), writer=writer)
 
     if use_expl:
         ani_prob = animation.FuncAnimation(fig, animate_prob, init_func=init_prob, frames=len(agents_trajectories[0]), interval=200, blit=True)
-        writer_prob = FFMpegWriter(fps=5) #it was fps=20
-        ani_prob.save(os.path.join(path, "animation_prob.mp4"), writer=writer)
+        writer_prob = FFMpegWriter(fps=15) #it was fps=20
+        ani_prob.save(os.path.join(path, "animation_prob.mp4"), writer=writer_prob)
 
     if show_plot:
         plt.show()
     plt.close()
 
 
-def plot_coverage(coverages, time_elapsed, type_of_search, expl_weight, num_of_iter, use_expl, use_bs, use_custom_prob, show_plot=False, path=None):
+def plot_coverage(coverages, time_elapsed, type_of_search, expl_weight, num_of_iter, use_expl, use_bs, use_custom_prob=False, show_plot=False, path=None):
     plt.subplots()
     plt.plot(range(len(coverages)), coverages)
     plt.xlabel('Iterations')

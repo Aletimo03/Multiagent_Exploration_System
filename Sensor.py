@@ -93,6 +93,8 @@ class Base_station(Sensor):
 
         # Define Tx power and altitude per scenario
         if scenario == "Suburban":
+            #altitude = 30  # meters
+            #transmitting_power = 30  # watts (between 20-40 W)
             altitude = 30  # meters
             transmitting_power = 30  # watts (between 20-40 W)
         elif scenario == "Urban":

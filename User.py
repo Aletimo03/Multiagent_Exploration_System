@@ -32,7 +32,15 @@ class User:
 
 
         self.is_active=True
-        self.death_time = int(random.gauss(NUM_OF_ITERATIONS + 2, 2.5))  # si puo usare una esponenziale
+        self.death_time = int(random.gauss(NUM_OF_ITERATIONS + 3, 2))   # distribuzione geometrica con p piccolo
+
+       # expected_life = (NUM_OF_ITERATIONS * 0.8)  # e.g., average user lives 80% of the simulation
+      #  p = 1 / (100* expected_life)  # derive p from desired mean
+       # self.death_time = int(np.random.geometric(p))# p or maybe Pd from the model
+
+        # print (self.id, " has death time: ",self.death_time) DEBUG line
+
+
 
         self.is_covered = None
         self.coverage_history = []

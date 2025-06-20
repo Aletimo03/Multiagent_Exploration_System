@@ -7,8 +7,8 @@ NUM_OF_SAMPLES = 25  # number of points each agent generates as potentially new 
 EPSILON = 0.1  # percentage of how the agent moves in the chosen direction
 COMMUNICATION_RADIUS = 200  # of the agent (default: 200)
 DESIRED_COVERAGE_LEVEL = 10  # around 10dB Good coverage, video streaming
-MAX_DISPLACEMENT = 10  # max distance an agent can move from its actual position
-NUM_OF_ITERATIONS = 10 # max num of iterations before the algorithm stops (default: 100, test: 30)
+MAX_DISPLACEMENT = 10 # max distance an agent can move from its actual position
+NUM_OF_ITERATIONS = 100 # max num of iterations before the algorithm stops (default: 100, test: 30)
 MIN_VERTICAL_DISTANCE = 0.15  # in meters
 SENSOR_HEIGHT = 0.15  # in meters
 AGENTS_COUPLING_PENALTY = 0.75
@@ -17,7 +17,7 @@ M = 30  # number of users
 N = 10  # number of agents
 B = 4  # number of base stations
 PENALTY = 1/M  # const for penalty search
-NUM_OF_SIMULATIONS = 1
+NUM_OF_SIMULATIONS = 10
 
 """ Power Spectral Density Noise """
 PSDN=4E-21 # Assuming 290K room temperature   PSDN(decibels relative to 1 milliwatt per Hertz)=-174dBm/Hz
@@ -58,7 +58,7 @@ COUPLING_DISTANCE = EXPLORATION_CELL_WIDTH * 3
 INIT_PROBABLITY = 0.5
 
 # User movement — realistic human-like walking model
-USER_VELOCITY_MEAN = 1.4             # m/s — avg. walking speed (slightly reduced for smoother turns)
+USER_VELOCITY_MEAN = 2             # m/s — avg. walking speed (slightly reduced for smoother turns)
 USER_VELOCITY_STD = 0.1              # m/s — reduced variability for more stable paths
 USER_ANGULAR_VELOCITY_STD = 0.1     # rad/step — mild angular changes for ~1–2 turns per 30 steps
 
