@@ -1,1 +1,1 @@
-Command '['/Users/alessiotimofte/ffmpeg-bin/ffmpeg', '-f', 'rawvideo', '-vcodec', 'rawvideo', '-s', '640x480', '-pix_fmt', 'rgba', '-framerate', '5', '-loglevel', 'error', '-i', 'pipe:', '-vcodec', 'h264', '-pix_fmt', 'yuv420p', '-y', 'Experiment results/experiment1/expl True/BS True/0/animation.mp4']' returned non-zero exit status 255.
+[Errno 2] No such file or directory: 'User death times/user0.p'

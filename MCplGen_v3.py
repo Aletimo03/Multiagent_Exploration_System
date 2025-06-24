@@ -91,7 +91,7 @@ def MCPlGen(scenario, f, h, d_ij, d_tr, prev_d,state, average=False):
     p2 = 1 - p1
     kappa = kappa0 * np.tan(theta_rad)
 
-    landa_signed= 1 / kappa * (1 - p1)
+    landa_signed= 1 / (kappa * (1 - p1))
 
     # Get LoS and NLoS mean losses
     mu1 = pars['mu1']

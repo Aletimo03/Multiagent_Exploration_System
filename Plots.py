@@ -12,7 +12,8 @@ import matplotlib as mpl
 
 from matplotlib.animation import FFMpegWriter
 # Set the FFmpeg path - note the full path including the executable name
-mpl.rcParams['animation.ffmpeg_path'] = '/Users/alessiotimofte/ffmpeg-bin/ffmpeg'
+mpl.rcParams['animation.ffmpeg_path'] = '/opt/homebrew/bin/ffmpeg'
+
 
 
 user_scatter = []
@@ -21,11 +22,11 @@ patch_grid = [[]]
 
 # array of color used in comparison graphics
 colors = [
-    #'red'
-    'darkorange'
-    , 'limegreen'
-    #, 'cornflowerblue'
-    #, 'mediumorchid'
+    'red',
+    'darkorange',
+     'limegreen',
+     'cornflowerblue',
+     'mediumorchid'
           ]
 
 def plot_area(area, users, base_stations, agents, type_of_search, num_of_iter, prob_matrix_history, expl_weight, use_expl, use_bs, use_custom_prob, show_plot=False, path=None):

@@ -39,7 +39,7 @@ def simulate(type_of_search, expl_weight, num_of_iter, deserialize, use_expl, us
 
     # Simulate all user trajectories in advance
     user_trajectories = [
-        user.simulate_trajectory_ct(steps=NUM_OF_ITERATIONS, area_width=area.width, area_length=area.length)
+        user.simulate_trajectory_ct(steps=NUM_OF_ITERATIONS, area_width=area.width, area_length=area.length,deserialize=deserialize)
         for user in users
     ]
     #

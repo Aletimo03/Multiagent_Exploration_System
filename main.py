@@ -22,10 +22,10 @@ def experiment1():
                 for expl_weight in expl_weights:
                     for expl  in [True, False]:
                         for BS in [True, False]:
-                            print(f'----- Starting simulation [{type_of_search}-{expl_weight}-{expl}--BS {BS}] : {i} @ {date.now()}-----')
+                            print(f'----- Starting simulation [{type_of_search}-{expl_weight}-{expl}--BS {BS}] : {i+13} @ {date.now()}-----')
                             with open("logs/output_log.txt", 'a') as f:
-                                f.write(f'----- Starting simulation [{type_of_search}-{expl_weight}-{expl}--BS {BS}] : {i} @ {date.now()}-----\n')
-                            simulate(type_of_search, expl_weight, i, deserialize, use_expl=expl, use_bs=BS, experiment_id=1)
+                                f.write(f'----- Starting simulation [{type_of_search}-{expl_weight}-{expl}--BS {BS}] : {i+13} @ {date.now()}-----\n')
+                            simulate(type_of_search, expl_weight, i+11, deserialize, use_expl=expl, use_bs=BS, experiment_id=1)
                             Sensor.id = 0
                             User.id = 0
                             deserialize = True
@@ -43,7 +43,7 @@ def experiment1():
 
 def experiment2():
     try:
-        types_of_search = ["systemic" , "local", "annealing forward", "annealing reverse", "penalty"]
+        types_of_search = ["systematic" , "local", "annealing forward", "annealing reverse", "penalty"]
         expl_weights = ["constant"]
 
         print(f"Simulations begin: {date.now()}\n")
@@ -75,15 +75,15 @@ def experiment2():
 
 def experiment3():
     try:
-        for i in range(NUM_OF_SIMULATIONS-8):
-            deserialize = False # try true for debug ( i want to check if output changes efffectively)
-            for prob in [True]: #True  #add FALSE   aggiunngere un terzo caso dove pn e pd sono molto piu basse rispetto a quelle usate nell'algoritmo
+        for i in range(NUM_OF_SIMULATIONS):
+            deserialize = False
+            for prob in [False,True]: #True  #add FALSE   aggiunngere un terzo caso dove pn e pd sono molto piu basse rispetto a quelle usate nell'algoritmo
                 print(f'----- Starting simulation [local-constant-custom prob {prob}] : {i+8} @ {date.now()}-----')
                 with open("logs/output_log.txt", 'a') as f:
                     f.write(f'----- Starting simulation [local-constant-custom prob {prob}] : {i+8} @ {date.now()}-----\n')
 
                 simulate("local", "constant", i+8, deserialize, use_expl=True, use_bs=True, use_custom_prob=prob, experiment_id=3)
-                Sensor.id = 0     # metti i+5 almeno posso spezzettare esperimenti
+                Sensor.id = 0     #  mettendo i+j posso spezzettare esperimenti
                 User.id = 0
                 deserialize = True
         print("Simulations completed")
@@ -98,6 +98,6 @@ def experiment3():
         raise e
 
 if __name__ == '__main__':
-  #  experiment1()
+    experiment1()
   #  experiment2()
-    experiment3()
+  #  experiment3()

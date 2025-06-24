@@ -32,8 +32,15 @@ class User:
 
 
         self.is_active=True
-        self.death_time = int(random.gauss(NUM_OF_ITERATIONS + 3, 2))   # distribuzione geometrica con p piccolo
 
+        if deserialize:
+            self.death_time = pickle.load(open("User death times/user" + str(self.id) + ".p", "rb"))
+        else:
+            self.death_time = int(random.gauss(NUM_OF_ITERATIONS + 4, 2.5))
+            pickle.dump((self.death_time), open("User death times/user" + str(self.id) + ".p", "wb"))
+
+
+   # distribuzione geometrica con p piccolo
        # expected_life = (NUM_OF_ITERATIONS * 0.8)  # e.g., average user lives 80% of the simulation
       #  p = 1 / (100* expected_life)  # derive p from desired mean
        # self.death_time = int(np.random.geometric(p))# p or maybe Pd from the model
@@ -110,10 +117,25 @@ class User:
 
         return trajectory
 
-    def simulate_trajectory_ct(self, steps, area_width, area_length):
+    def simulate_trajectory_ct(self, steps, area_width, area_length,deserialize=False):
         """
         Simulates a trajectory using a refined coordinated turn model.
         """
+        trajectory_path = f"User trajectories/user{self.id}.p"
+        if deserialize:
+                try:
+                    with open(trajectory_path, "rb") as f:
+                        trajectory = pickle.load(f)
+                        if isinstance(trajectory, list) and all(
+                                isinstance(p, tuple) and len(p) == 2 for p in trajectory):
+                            return trajectory
+                        else:
+                            raise ValueError("Malformed trajectory data.")
+                except Exception as e:
+                    print(f"[WARNING] Failed to load trajectory for User {self.id}: {e}")
+                    # Fall back to simulation
+
+
         x, y = self.__x, self.__y
         theta = self.theta
 
@@ -152,6 +174,10 @@ class User:
             y = min(max(y + dy, 0), area_length)
 
             trajectory.append((x, y))
+
+        #stores the trajectories
+        with open(trajectory_path, "wb") as f:
+            pickle.dump(trajectory, f)
 
         return trajectory
 

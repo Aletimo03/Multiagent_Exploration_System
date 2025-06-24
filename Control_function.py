@@ -143,7 +143,7 @@ class Control_function:
     # Methods for the SIGNAL analysis
     # ==================================================================================================================
     @staticmethod
-    def channel_gain(current_sensor, current_user):
+    def average_channel_gain(current_sensor, current_user):
         """Return the channel gain between agent and user (average pathloss).  """
 
         sensor_pos = current_sensor.get_3D_position()
@@ -170,7 +170,7 @@ class Control_function:
      return PATH_GAIN / math.pow(math.dist(current_sensor.get_3D_position(), current_user.get_position() + (0,)), 2)
 
 
-    def LoS_based_channel_gain_(self,current_sensor, current_user, LoS_state):
+    def LoS_effective_channel_gain(self, current_sensor, current_user, LoS_state):
         """Return the LoS-based channel gain between agent and user."""
         d_ij,prev_d,d_tr=self.__get__MCplGen_parameters(current_user,current_sensor)
 
@@ -304,7 +304,7 @@ class Control_function:
                 if user.is_covered or eval_all_users:
                     if eval_LoS:
                       state = LoS_matrix[sensor.id][user.id]
-                      sinr = (self.LoS_based_channel_gain_(sensor,user,state) * sensor.transmitting_power) / (
+                      sinr = (self.LoS_effective_channel_gain(sensor, user, state) * sensor.transmitting_power) / (
                             interference_powers[sensor.id][user.id] + PSDN * BANDWIDTH )
 
                     #  if sinr > DESIRED_COVERAGE_LEVEL:
@@ -318,8 +318,8 @@ class Control_function:
 
                     SINR_matrix[sensor.id][user.id] = sinr
 
-        if eval_LoS:
-            self.__update_LoS_matrix()
+       # if eval_LoS:
+         #   self.__update_LoS_matrix()
 
         return SINR_matrix
 
@@ -340,7 +340,7 @@ class Control_function:
             if total_SINR_per_user[user.id] - user.desired_coverage_level > 0 and (self.backhaul_network_available or is_graph_connected): # lazy evaluation
                 RCR_active_users += 1
 
-        return RCR_active_users / self.__get__active_users()  # TODO si puo togliere la frazione e tenere il rcr
+        return RCR_active_users / self.__get_num_active_users()  # TODO si puo togliere la frazione e tenere il rcr
 
     # Returns the RCR value after the agents' movement, not used in control function
     def RCR_after_move(self):
@@ -367,11 +367,11 @@ class Control_function:
               RCR +=1
               user_covered_flag = True
             user.set_is_covered(user_covered_flag)
-        all_user_coverage = RCR / self.__get__users()
+        all_user_coverage = RCR / self.__get_num_users()
 
-        print("Active users covered: ",RCR_is_active,",All user covered:",RCR,", Number of active users",self.__get__active_users(),"All user coverage level", all_user_coverage)
+        print("Active users covered: ", RCR_is_active,",All user covered:", RCR,", Number of active users", self.__get_num_active_users(), "All user coverage level", all_user_coverage)
 
-        return RCR_is_active / (self.__get__active_users())
+        return RCR_is_active / (self.__get_num_active_users())
 
     # ==================================================================================================================
     # Method that SAMPLES new points
@@ -463,8 +463,8 @@ class Control_function:
             for user in self.users:
             # if user.is_active: TO DO LATER
                 for sensor in other_agents + self.base_stations:
-                    interference_powers_new_position[sensor.id][user.id] += ( agent.transmitting_power *
-                                                                            self.channel_gain(agent, user) ) #mu COSTANT for LoS gain ( without markov chain)
+                    interference_powers_new_position[sensor.id][user.id] += (agent.transmitting_power *
+                                                                             self.average_channel_gain(agent, user)) #mu COSTANT for LoS gain ( without markov chain)
 
             SINR_matrix = self.__SINR(interference_powers_new_position)
             new_coverage_level = self.__RCR(SINR_matrix)
@@ -880,7 +880,7 @@ class Control_function:
         return num
 
 
-    def __get__active_users(self):
+    def __get_num_active_users(self):
         i=0
         for user in self.users:
             if user.is_active:
@@ -888,7 +888,7 @@ class Control_function:
         return i
 
 
-    def __get__users(self):
+    def __get_num_users(self):
         i=0
         for user in self.users:
                 i+=1
@@ -1020,6 +1020,3 @@ class Control_function:
              #   print("state:", sensor.id, user.id  , state)
 
                 self.__LoS_matrix[sensor.id][user.id] = state
-
-    def update_users(self,users):
-        self.users=users
