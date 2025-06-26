@@ -259,6 +259,7 @@ class Control_function:
                     raise ValueError("LoS matrix not initialized. Call `initialize_LoS_matrix_from_probability` first.")
 
                 prev_state = self.__LoS_matrix[sensor.id][user.id]
+               # print(prev_state)
 
                 # 3D positions
                 x_uav, y_uav, z_uav = sensor.get_3D_position()
@@ -268,7 +269,7 @@ class Control_function:
 
 
                 # Apply your path loss generator and get new state
-                _, state = MCPlGen(
+                _, new_state = MCPlGen(
                         scenario=TYPE_OF_SCENARIO,  # You may generalize this
                         f=CARRIER_FREQUENCY,  # Frequency in MHz
                         h=z_uav,  # UAV altitude
@@ -278,8 +279,6 @@ class Control_function:
                         average=False,
                         state=prev_state
                     )
-
-                new_state = 'LoS' if state == 1 else 'NLoS'
                # if new_state != prev_state:
                 #   print(f"From {prev_state} User {user.id} transitioned to {new_state} state in respect to {sensor.id}")
                # else:
@@ -293,9 +292,9 @@ class Control_function:
     def __SINR(self, interference_powers, eval_all_users=False,eval_LoS=False):
         SINR_matrix = numpy.zeros((len(self.agents) + len(self.base_stations), len(self.users)))
 
-        if eval_LoS:
-            print("UPDATE LOS MATRIX")
-            self.__update_LoS_matrix()
+        #if eval_LoS:
+           # print("UPDATE LOS MATRIX")
+           # self.__update_LoS_matrix()
 
         LoS_matrix=self.__LoS_matrix
 
@@ -318,8 +317,10 @@ class Control_function:
 
                     SINR_matrix[sensor.id][user.id] = sinr
 
-       # if eval_LoS:
-         #   self.__update_LoS_matrix()
+        if eval_LoS:
+            self.__update_LoS_matrix()
+            print("UPDATE LOS MATRIX")
+
 
         return SINR_matrix
 
