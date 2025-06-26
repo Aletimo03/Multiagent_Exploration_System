@@ -36,7 +36,7 @@ class User:
         if deserialize:
             self.death_time = pickle.load(open("User death times/user" + str(self.id) + ".p", "rb"))
         else:
-            self.death_time = int(random.gauss(NUM_OF_ITERATIONS + 4, 2.5))
+            self.death_time = int(random.gauss(NUM_OF_ITERATIONS + 4, 2))
             pickle.dump((self.death_time), open("User death times/user" + str(self.id) + ".p", "wb"))
 
 

@@ -22,10 +22,10 @@ def experiment1():
                 for expl_weight in expl_weights:
                     for expl  in [True, False]:
                         for BS in [True, False]:
-                            print(f'----- Starting simulation [{type_of_search}-{expl_weight}-{expl}--BS {BS}] : {i+13} @ {date.now()}-----')
+                            print(f'----- Starting simulation [{type_of_search}-{expl_weight}-{expl}--BS {BS}] : {i+18} @ {date.now()}-----')
                             with open("logs/output_log.txt", 'a') as f:
-                                f.write(f'----- Starting simulation [{type_of_search}-{expl_weight}-{expl}--BS {BS}] : {i+13} @ {date.now()}-----\n')
-                            simulate(type_of_search, expl_weight, i+11, deserialize, use_expl=expl, use_bs=BS, experiment_id=1)
+                                f.write(f'----- Starting simulation [{type_of_search}-{expl_weight}-{expl}--BS {BS}] : {i+18} @ {date.now()}-----\n')
+                            simulate(type_of_search, expl_weight, i+18, deserialize, use_expl=expl, use_bs=BS, experiment_id=1)
                             Sensor.id = 0
                             User.id = 0
                             deserialize = True
@@ -54,11 +54,11 @@ def experiment2():
             deserialize = False
             for type_of_search in types_of_search:
                 for expl_weight in expl_weights:
-                    print(f'----- Starting simulation [{type_of_search}-{expl_weight}] : {i} @ {date.now()}-----')
+                    print(f'----- Starting simulation [{type_of_search}-{expl_weight}] : {i+10} @ {date.now()}-----')
                     with open("logs/output_log.txt", 'a') as f:
-                        f.write(f'----- Starting simulation [{type_of_search}-{expl_weight}] : {i} @ {date.now()}-----\n')
+                        f.write(f'----- Starting simulation [{type_of_search}-{expl_weight}] : {i+10} @ {date.now()}-----\n')
 
-                    simulate(type_of_search, expl_weight, i, deserialize, use_expl=True, use_bs=True,experiment_id=2)
+                    simulate(type_of_search, expl_weight, i+10, deserialize, use_expl=True, use_bs=True,experiment_id=2)
                     Sensor.id = 0
                     User.id = 0
                     deserialize = True
@@ -78,11 +78,11 @@ def experiment3():
         for i in range(NUM_OF_SIMULATIONS):
             deserialize = False
             for prob in [False,True]: #True  #add FALSE   aggiunngere un terzo caso dove pn e pd sono molto piu basse rispetto a quelle usate nell'algoritmo
-                print(f'----- Starting simulation [local-constant-custom prob {prob}] : {i+8} @ {date.now()}-----')
+                print(f'----- Starting simulation [local-constant-custom prob {prob}] : {i} @ {date.now()}-----')
                 with open("logs/output_log.txt", 'a') as f:
-                    f.write(f'----- Starting simulation [local-constant-custom prob {prob}] : {i+8} @ {date.now()}-----\n')
+                    f.write(f'----- Starting simulation [local-constant-custom prob {prob}] : {i} @ {date.now()}-----\n')
 
-                simulate("local", "constant", i+8, deserialize, use_expl=True, use_bs=True, use_custom_prob=prob, experiment_id=3)
+                simulate("local", "constant", i, deserialize, use_expl=True, use_bs=True, use_custom_prob=prob, experiment_id=3)
                 Sensor.id = 0     #  mettendo i+j posso spezzettare esperimenti
                 User.id = 0
                 deserialize = True
@@ -98,6 +98,6 @@ def experiment3():
         raise e
 
 if __name__ == '__main__':
-    experiment1()
-  #  experiment2()
-  #  experiment3()
+   # experiment1()
+    experiment2()
+   # experiment3()
