@@ -1,356 +1,277 @@
-Simulations begin: 2025-06-26 08:13:50.602193
------ Starting simulation [local-constant-True--BS True] : 10 @ 2025-06-26 08:13:50.602263-----
-local iteration: 10 | coverage level: 0.7666666666666667 | exploration level: 0.7307469215680755
-local iteration: 20 | coverage level: 0.8 | exploration level: 0.74422834941514
-local iteration: 30 | coverage level: 0.8666666666666667 | exploration level: 0.7654413576918498
-local iteration: 40 | coverage level: 0.8 | exploration level: 0.7784923348121177
-local iteration: 50 | coverage level: 0.7333333333333333 | exploration level: 0.7923944763947708
-local iteration: 60 | coverage level: 0.7666666666666667 | exploration level: 0.7935036123012729
-local iteration: 70 | coverage level: 0.8 | exploration level: 0.7904935113027056
-local iteration: 80 | coverage level: 0.7666666666666667 | exploration level: 0.788762013688135
-local iteration: 90 | coverage level: 0.8666666666666667 | exploration level: 0.7824775179460609
-local iteration: 100 | coverage level: 0.8275862068965517 | exploration level: 0.7876288485337766
------ Starting simulation [local-constant-True--BS False] : 10 @ 2025-06-26 08:16:39.996887-----
-local iteration: 10 | coverage level: 0.43333333333333335 | exploration level: 0.5918436141276621
-local iteration: 20 | coverage level: 0.5 | exploration level: 0.6302364500789335
-local iteration: 30 | coverage level: 0.5666666666666667 | exploration level: 0.659409208068211
-local iteration: 40 | coverage level: 0.5666666666666667 | exploration level: 0.6625925046484322
-local iteration: 50 | coverage level: 0.5333333333333333 | exploration level: 0.6535652708661259
-local iteration: 60 | coverage level: 0.4666666666666667 | exploration level: 0.6586804294127645
-local iteration: 70 | coverage level: 0.5666666666666667 | exploration level: 0.6673697844848939
-local iteration: 80 | coverage level: 0.5 | exploration level: 0.6888764205547148
-local iteration: 90 | coverage level: 0.6 | exploration level: 0.7035437369491914
-local iteration: 100 | coverage level: 0.5862068965517241 | exploration level: 0.7073684127615545
------ Starting simulation [local-constant-False--BS True] : 10 @ 2025-06-26 08:19:22.210448-----
-local iteration: 10 | coverage level: 0.6666666666666666
-local iteration: 20 | coverage level: 0.7333333333333333
-local iteration: 30 | coverage level: 0.8
-local iteration: 40 | coverage level: 0.7666666666666667
-local iteration: 50 | coverage level: 0.9
-local iteration: 60 | coverage level: 0.7666666666666667
-local iteration: 70 | coverage level: 0.7666666666666667
-local iteration: 80 | coverage level: 0.8666666666666667
-local iteration: 90 | coverage level: 0.8666666666666667
-local iteration: 100 | coverage level: 0.8275862068965517
------ Starting simulation [local-constant-False--BS False] : 10 @ 2025-06-26 08:19:36.747816-----
-local iteration: 10 | coverage level: 0.4
-local iteration: 20 | coverage level: 0.4666666666666667
-local iteration: 30 | coverage level: 0.5
-local iteration: 40 | coverage level: 0.4666666666666667
-local iteration: 50 | coverage level: 0.5
-local iteration: 60 | coverage level: 0.5666666666666667
-local iteration: 70 | coverage level: 0.5333333333333333
-local iteration: 80 | coverage level: 0.5666666666666667
-local iteration: 90 | coverage level: 0.5666666666666667
-local iteration: 100 | coverage level: 0.5517241379310345
------ Starting simulation [local-constant-True--BS True] : 11 @ 2025-06-26 08:19:49.547423-----
-local iteration: 10 | coverage level: 0.6 | exploration level: 0.721758140267997
-local iteration: 20 | coverage level: 0.7333333333333333 | exploration level: 0.7567664712468047
-local iteration: 30 | coverage level: 0.7333333333333333 | exploration level: 0.7699566724832134
-local iteration: 40 | coverage level: 0.8 | exploration level: 0.776106009404938
-local iteration: 50 | coverage level: 0.7333333333333333 | exploration level: 0.7792522952526578
-local iteration: 60 | coverage level: 0.7333333333333333 | exploration level: 0.785725195128159
-local iteration: 70 | coverage level: 0.7666666666666667 | exploration level: 0.7837890778500652
-local iteration: 80 | coverage level: 0.7666666666666667 | exploration level: 0.7914342845705803
-local iteration: 90 | coverage level: 0.8333333333333334 | exploration level: 0.7971151696311629
-local iteration: 100 | coverage level: 0.7142857142857143 | exploration level: 0.8070789732893545
------ Starting simulation [local-constant-True--BS False] : 11 @ 2025-06-26 08:22:38.289824-----
-local iteration: 10 | coverage level: 0.3333333333333333 | exploration level: 0.6028396346969945
-local iteration: 20 | coverage level: 0.43333333333333335 | exploration level: 0.6294622203485927
-local iteration: 30 | coverage level: 0.5333333333333333 | exploration level: 0.6337463215020543
-local iteration: 40 | coverage level: 0.5 | exploration level: 0.6277606475288966
-local iteration: 50 | coverage level: 0.5333333333333333 | exploration level: 0.6315922626285394
-local iteration: 60 | coverage level: 0.5 | exploration level: 0.6273686455510782
-local iteration: 70 | coverage level: 0.5333333333333333 | exploration level: 0.6420431073949933
-local iteration: 80 | coverage level: 0.5666666666666667 | exploration level: 0.6433491875272033
-local iteration: 90 | coverage level: 0.5666666666666667 | exploration level: 0.6463754668965216
-local iteration: 100 | coverage level: 0.5357142857142857 | exploration level: 0.6412485498642714
------ Starting simulation [local-constant-False--BS True] : 11 @ 2025-06-26 08:25:20.758080-----
-local iteration: 10 | coverage level: 0.7
-local iteration: 20 | coverage level: 0.6
-local iteration: 30 | coverage level: 0.7666666666666667
-local iteration: 40 | coverage level: 0.8
-local iteration: 50 | coverage level: 0.6333333333333333
-local iteration: 60 | coverage level: 0.9333333333333333
-local iteration: 70 | coverage level: 0.8333333333333334
-local iteration: 80 | coverage level: 0.8333333333333334
-local iteration: 90 | coverage level: 0.6666666666666666
-local iteration: 100 | coverage level: 0.7857142857142857
------ Starting simulation [local-constant-False--BS False] : 11 @ 2025-06-26 08:25:35.151795-----
-local iteration: 10 | coverage level: 0.4
-local iteration: 20 | coverage level: 0.43333333333333335
-local iteration: 30 | coverage level: 0.4666666666666667
-local iteration: 40 | coverage level: 0.5
-local iteration: 50 | coverage level: 0.5
-local iteration: 60 | coverage level: 0.43333333333333335
-local iteration: 70 | coverage level: 0.4666666666666667
-local iteration: 80 | coverage level: 0.5333333333333333
-local iteration: 90 | coverage level: 0.5333333333333333
-local iteration: 100 | coverage level: 0.5714285714285714
------ Starting simulation [local-constant-True--BS True] : 12 @ 2025-06-26 08:25:47.984282-----
-local iteration: 10 | coverage level: 0.6333333333333333 | exploration level: 0.7372737351802916
-local iteration: 20 | coverage level: 0.7666666666666667 | exploration level: 0.7678280716772965
-local iteration: 30 | coverage level: 0.8666666666666667 | exploration level: 0.7816699393659436
-local iteration: 40 | coverage level: 0.8333333333333334 | exploration level: 0.7845817194909379
-local iteration: 50 | coverage level: 0.9 | exploration level: 0.7872243443958373
-local iteration: 60 | coverage level: 0.8333333333333334 | exploration level: 0.7867326416329857
-local iteration: 70 | coverage level: 0.8 | exploration level: 0.7912681142642356
-local iteration: 80 | coverage level: 0.8 | exploration level: 0.7916885104078452
-local iteration: 90 | coverage level: 0.8333333333333334 | exploration level: 0.7910335825066684
-local iteration: 100 | coverage level: 0.75 | exploration level: 0.7938322796438214
------ Starting simulation [local-constant-True--BS False] : 12 @ 2025-06-26 08:28:36.866453-----
-local iteration: 10 | coverage level: 0.23333333333333334 | exploration level: 0.6111231541348314
-local iteration: 20 | coverage level: 0.4 | exploration level: 0.6448616465112069
-local iteration: 30 | coverage level: 0.43333333333333335 | exploration level: 0.6630705543970588
-local iteration: 40 | coverage level: 0.43333333333333335 | exploration level: 0.6696701256587196
-local iteration: 50 | coverage level: 0.5333333333333333 | exploration level: 0.6713560689858037
-local iteration: 60 | coverage level: 0.6666666666666666 | exploration level: 0.6701605315885646
-local iteration: 70 | coverage level: 0.7 | exploration level: 0.6622077240384622
-local iteration: 80 | coverage level: 0.7333333333333333 | exploration level: 0.6543769368009972
-local iteration: 90 | coverage level: 0.7333333333333333 | exploration level: 0.6534638491816804
-local iteration: 100 | coverage level: 0.6785714285714286 | exploration level: 0.6568399097115057
------ Starting simulation [local-constant-False--BS True] : 12 @ 2025-06-26 08:31:17.637161-----
-local iteration: 10 | coverage level: 0.4666666666666667
-local iteration: 20 | coverage level: 0.6
-local iteration: 30 | coverage level: 0.7666666666666667
-local iteration: 40 | coverage level: 0.7
-local iteration: 50 | coverage level: 0.7666666666666667
-local iteration: 60 | coverage level: 0.8
-local iteration: 70 | coverage level: 0.8
-local iteration: 80 | coverage level: 0.8
-local iteration: 90 | coverage level: 0.8333333333333334
-local iteration: 100 | coverage level: 0.9642857142857143
------ Starting simulation [local-constant-False--BS False] : 12 @ 2025-06-26 08:31:32.322665-----
-local iteration: 10 | coverage level: 0.23333333333333334
-local iteration: 20 | coverage level: 0.26666666666666666
-local iteration: 30 | coverage level: 0.4
-local iteration: 40 | coverage level: 0.4666666666666667
-local iteration: 50 | coverage level: 0.5666666666666667
-local iteration: 60 | coverage level: 0.6666666666666666
-local iteration: 70 | coverage level: 0.6666666666666666
-local iteration: 80 | coverage level: 0.6333333333333333
-local iteration: 90 | coverage level: 0.6333333333333333
-local iteration: 100 | coverage level: 0.6071428571428571
------ Starting simulation [local-constant-True--BS True] : 13 @ 2025-06-26 08:31:45.349487-----
-local iteration: 10 | coverage level: 0.5333333333333333 | exploration level: 0.7129741331667299
-local iteration: 20 | coverage level: 0.7 | exploration level: 0.7263125249861346
-local iteration: 30 | coverage level: 0.7666666666666667 | exploration level: 0.733485150154667
-local iteration: 40 | coverage level: 0.8 | exploration level: 0.7449163907241053
-local iteration: 50 | coverage level: 0.8 | exploration level: 0.7592027702219849
-local iteration: 60 | coverage level: 0.8666666666666667 | exploration level: 0.7665158901873715
-local iteration: 70 | coverage level: 0.8666666666666667 | exploration level: 0.768815742875216
-local iteration: 80 | coverage level: 0.9 | exploration level: 0.7727216177998303
-local iteration: 90 | coverage level: 0.8666666666666667 | exploration level: 0.7737738100074706
-local iteration: 100 | coverage level: 0.8620689655172413 | exploration level: 0.7800888137254457
------ Starting simulation [local-constant-True--BS False] : 13 @ 2025-06-26 08:34:40.463860-----
-local iteration: 10 | coverage level: 0.3 | exploration level: 0.5744478744196853
-local iteration: 20 | coverage level: 0.4 | exploration level: 0.6017906115103536
-local iteration: 30 | coverage level: 0.43333333333333335 | exploration level: 0.6141687513221832
-local iteration: 40 | coverage level: 0.5 | exploration level: 0.6313727795184546
-local iteration: 50 | coverage level: 0.4666666666666667 | exploration level: 0.629651059540227
-local iteration: 60 | coverage level: 0.5666666666666667 | exploration level: 0.623420152327717
-local iteration: 70 | coverage level: 0.5333333333333333 | exploration level: 0.6232706728351494
-local iteration: 80 | coverage level: 0.5333333333333333 | exploration level: 0.6370019191794732
-local iteration: 90 | coverage level: 0.5333333333333333 | exploration level: 0.6350733072327361
-local iteration: 100 | coverage level: 0.5862068965517241 | exploration level: 0.6291285450275214
------ Starting simulation [local-constant-False--BS True] : 13 @ 2025-06-26 08:37:29.081418-----
-local iteration: 10 | coverage level: 0.7666666666666667
-local iteration: 20 | coverage level: 0.7
-local iteration: 30 | coverage level: 0.7
-local iteration: 40 | coverage level: 0.7666666666666667
-local iteration: 50 | coverage level: 0.7666666666666667
-local iteration: 60 | coverage level: 0.8666666666666667
-local iteration: 70 | coverage level: 0.9
-local iteration: 80 | coverage level: 0.9
-local iteration: 90 | coverage level: 0.9333333333333333
-local iteration: 100 | coverage level: 0.7586206896551724
------ Starting simulation [local-constant-False--BS False] : 13 @ 2025-06-26 08:37:44.301630-----
-local iteration: 10 | coverage level: 0.26666666666666666
-local iteration: 20 | coverage level: 0.4
-local iteration: 30 | coverage level: 0.4
-local iteration: 40 | coverage level: 0.43333333333333335
-local iteration: 50 | coverage level: 0.5
-local iteration: 60 | coverage level: 0.4666666666666667
-local iteration: 70 | coverage level: 0.5666666666666667
-local iteration: 80 | coverage level: 0.5
-local iteration: 90 | coverage level: 0.5
-local iteration: 100 | coverage level: 0.5862068965517241
------ Starting simulation [local-constant-True--BS True] : 14 @ 2025-06-26 08:37:57.535177-----
-local iteration: 10 | coverage level: 0.6333333333333333 | exploration level: 0.7254401405007805
-local iteration: 20 | coverage level: 0.7 | exploration level: 0.7536023345981286
-local iteration: 30 | coverage level: 0.7666666666666667 | exploration level: 0.7689317735159821
-local iteration: 40 | coverage level: 0.7 | exploration level: 0.780329607601248
-local iteration: 50 | coverage level: 0.7666666666666667 | exploration level: 0.7772375103131102
-local iteration: 60 | coverage level: 0.7 | exploration level: 0.7724122178641857
-local iteration: 70 | coverage level: 0.7333333333333333 | exploration level: 0.7792698467381732
-local iteration: 80 | coverage level: 0.7333333333333333 | exploration level: 0.782381449222262
-local iteration: 90 | coverage level: 0.7666666666666667 | exploration level: 0.777655441941174
-local iteration: 100 | coverage level: 0.8620689655172413 | exploration level: 0.7821569881305573
------ Starting simulation [local-constant-True--BS False] : 14 @ 2025-06-26 08:40:53.902123-----
-local iteration: 10 | coverage level: 0.3 | exploration level: 0.6339328772757371
-local iteration: 20 | coverage level: 0.3333333333333333 | exploration level: 0.6612782949263138
-local iteration: 30 | coverage level: 0.36666666666666664 | exploration level: 0.6787741196416612
-local iteration: 40 | coverage level: 0.4666666666666667 | exploration level: 0.6769492887412379
-local iteration: 50 | coverage level: 0.5666666666666667 | exploration level: 0.6852593029513226
-local iteration: 60 | coverage level: 0.5333333333333333 | exploration level: 0.6853773137762955
-local iteration: 70 | coverage level: 0.5666666666666667 | exploration level: 0.690391267134484
-local iteration: 80 | coverage level: 0.6 | exploration level: 0.6820284454983385
-local iteration: 90 | coverage level: 0.6333333333333333 | exploration level: 0.6899099769430159
-local iteration: 100 | coverage level: 0.7931034482758621 | exploration level: 0.6861093428668521
------ Starting simulation [local-constant-False--BS True] : 14 @ 2025-06-26 08:43:45.276371-----
-local iteration: 10 | coverage level: 0.6333333333333333
-local iteration: 20 | coverage level: 0.6333333333333333
-local iteration: 30 | coverage level: 0.8333333333333334
-local iteration: 40 | coverage level: 0.7
-local iteration: 50 | coverage level: 0.7
-local iteration: 60 | coverage level: 0.6
-local iteration: 70 | coverage level: 0.8666666666666667
-local iteration: 80 | coverage level: 0.9
-local iteration: 90 | coverage level: 0.7666666666666667
-local iteration: 100 | coverage level: 0.7586206896551724
------ Starting simulation [local-constant-False--BS False] : 14 @ 2025-06-26 08:44:00.498340-----
-local iteration: 10 | coverage level: 0.3333333333333333
-local iteration: 20 | coverage level: 0.3333333333333333
-local iteration: 30 | coverage level: 0.4
-local iteration: 40 | coverage level: 0.4666666666666667
-local iteration: 50 | coverage level: 0.5
-local iteration: 60 | coverage level: 0.43333333333333335
-local iteration: 70 | coverage level: 0.4666666666666667
-local iteration: 80 | coverage level: 0.5
-local iteration: 90 | coverage level: 0.43333333333333335
-local iteration: 100 | coverage level: 0.4482758620689655
------ Starting simulation [local-constant-True--BS True] : 15 @ 2025-06-26 08:44:14.658435-----
-local iteration: 10 | coverage level: 0.7 | exploration level: 0.7507145225126184
-local iteration: 20 | coverage level: 0.7 | exploration level: 0.7555934286101459
-local iteration: 30 | coverage level: 0.8 | exploration level: 0.7622731845513823
-local iteration: 40 | coverage level: 0.8333333333333334 | exploration level: 0.7791187133606589
-local iteration: 50 | coverage level: 0.7666666666666667 | exploration level: 0.7858912362115998
-local iteration: 60 | coverage level: 0.7333333333333333 | exploration level: 0.7876885166991318
-local iteration: 70 | coverage level: 0.7333333333333333 | exploration level: 0.793900633710447
-local iteration: 80 | coverage level: 0.7666666666666667 | exploration level: 0.7999765566785025
-local iteration: 90 | coverage level: 0.9 | exploration level: 0.7973517735729072
-local iteration: 100 | coverage level: 0.8148148148148148 | exploration level: 0.789057387172463
------ Starting simulation [local-constant-True--BS False] : 15 @ 2025-06-26 08:47:17.060845-----
-local iteration: 10 | coverage level: 0.3333333333333333 | exploration level: 0.6322060620799703
-local iteration: 20 | coverage level: 0.43333333333333335 | exploration level: 0.6503350465950569
-local iteration: 30 | coverage level: 0.5 | exploration level: 0.6628314857916386
-local iteration: 40 | coverage level: 0.5333333333333333 | exploration level: 0.6688482724136386
-local iteration: 50 | coverage level: 0.5 | exploration level: 0.6787461312193905
-local iteration: 60 | coverage level: 0.5 | exploration level: 0.6837422999615681
-local iteration: 70 | coverage level: 0.5333333333333333 | exploration level: 0.6820651669844578
-local iteration: 80 | coverage level: 0.5 | exploration level: 0.6798330867934558
-local iteration: 90 | coverage level: 0.5 | exploration level: 0.6899240364682498
-local iteration: 100 | coverage level: 0.6296296296296297 | exploration level: 0.7004161331344543
------ Starting simulation [local-constant-False--BS True] : 15 @ 2025-06-26 08:50:30.721882-----
-local iteration: 10 | coverage level: 0.6666666666666666
-local iteration: 20 | coverage level: 0.7666666666666667
-local iteration: 30 | coverage level: 0.6333333333333333
-local iteration: 40 | coverage level: 0.7
-local iteration: 50 | coverage level: 0.6666666666666666
-local iteration: 60 | coverage level: 0.8
-local iteration: 70 | coverage level: 0.6666666666666666
-local iteration: 80 | coverage level: 0.8333333333333334
-local iteration: 90 | coverage level: 0.7333333333333333
-local iteration: 100 | coverage level: 0.8888888888888888
------ Starting simulation [local-constant-False--BS False] : 15 @ 2025-06-26 08:50:48.899300-----
-local iteration: 10 | coverage level: 0.3333333333333333
-local iteration: 20 | coverage level: 0.4
-local iteration: 30 | coverage level: 0.5
-local iteration: 40 | coverage level: 0.5
-local iteration: 50 | coverage level: 0.5333333333333333
-local iteration: 60 | coverage level: 0.4666666666666667
-local iteration: 70 | coverage level: 0.5333333333333333
-local iteration: 80 | coverage level: 0.6
-local iteration: 90 | coverage level: 0.5666666666666667
-local iteration: 100 | coverage level: 0.5185185185185185
------ Starting simulation [local-constant-True--BS True] : 16 @ 2025-06-26 08:51:04.459286-----
-local iteration: 10 | coverage level: 0.6 | exploration level: 0.7104837820051985
-local iteration: 20 | coverage level: 0.6333333333333333 | exploration level: 0.751520516548635
-local iteration: 30 | coverage level: 0.6333333333333333 | exploration level: 0.7800685300275028
-local iteration: 40 | coverage level: 0.7 | exploration level: 0.7961830778669964
-local iteration: 50 | coverage level: 0.7333333333333333 | exploration level: 0.806931155962026
-local iteration: 60 | coverage level: 0.8333333333333334 | exploration level: 0.8115181059343416
-local iteration: 70 | coverage level: 0.7333333333333333 | exploration level: 0.8161131833918537
-local iteration: 80 | coverage level: 0.8666666666666667 | exploration level: 0.8303011352021754
-local iteration: 90 | coverage level: 0.8666666666666667 | exploration level: 0.8288000329126437
-local iteration: 100 | coverage level: 0.7692307692307693 | exploration level: 0.8273587870508557
------ Starting simulation [local-constant-True--BS False] : 16 @ 2025-06-26 08:54:02.259573-----
-local iteration: 10 | coverage level: 0.3 | exploration level: 0.5747102172931543
-local iteration: 20 | coverage level: 0.5333333333333333 | exploration level: 0.6551562739339657
-local iteration: 30 | coverage level: 0.5 | exploration level: 0.6946466920246496
-local iteration: 40 | coverage level: 0.5 | exploration level: 0.7054002116876953
-local iteration: 50 | coverage level: 0.6 | exploration level: 0.7056719986714209
-local iteration: 60 | coverage level: 0.6 | exploration level: 0.6981827713950953
-local iteration: 70 | coverage level: 0.6333333333333333 | exploration level: 0.6884267647520574
-local iteration: 80 | coverage level: 0.7 | exploration level: 0.6830702570113241
-local iteration: 90 | coverage level: 0.6666666666666666 | exploration level: 0.6848819674269571
-local iteration: 100 | coverage level: 0.6923076923076923 | exploration level: 0.6790843666448573
------ Starting simulation [local-constant-False--BS True] : 16 @ 2025-06-26 08:56:50.535821-----
-local iteration: 10 | coverage level: 0.6333333333333333
-local iteration: 20 | coverage level: 0.7
-local iteration: 30 | coverage level: 0.6666666666666666
-local iteration: 40 | coverage level: 0.8666666666666667
-local iteration: 50 | coverage level: 0.9333333333333333
-local iteration: 60 | coverage level: 0.9
-local iteration: 70 | coverage level: 0.8666666666666667
-local iteration: 80 | coverage level: 0.9
-local iteration: 90 | coverage level: 0.9
-local iteration: 100 | coverage level: 0.8846153846153846
------ Starting simulation [local-constant-False--BS False] : 16 @ 2025-06-26 08:57:07.549640-----
-local iteration: 10 | coverage level: 0.3
-local iteration: 20 | coverage level: 0.26666666666666666
-local iteration: 30 | coverage level: 0.4666666666666667
-local iteration: 40 | coverage level: 0.7333333333333333
-local iteration: 50 | coverage level: 0.6333333333333333
-local iteration: 60 | coverage level: 0.8
-local iteration: 70 | coverage level: 0.7333333333333333
-local iteration: 80 | coverage level: 0.8333333333333334
-local iteration: 90 | coverage level: 0.7666666666666667
-local iteration: 100 | coverage level: 0.6923076923076923
------ Starting simulation [local-constant-True--BS True] : 17 @ 2025-06-26 08:57:23.666420-----
-local iteration: 10 | coverage level: 0.7333333333333333 | exploration level: 0.7579286719596039
-local iteration: 20 | coverage level: 0.6666666666666666 | exploration level: 0.7827760807380356
-local iteration: 30 | coverage level: 0.8333333333333334 | exploration level: 0.8014836499915241
-local iteration: 40 | coverage level: 0.8 | exploration level: 0.8183994214087015
-local iteration: 50 | coverage level: 0.8 | exploration level: 0.8247837317881372
-local iteration: 60 | coverage level: 0.8333333333333334 | exploration level: 0.8190348132784806
-local iteration: 70 | coverage level: 0.7 | exploration level: 0.814608382236669
-local iteration: 80 | coverage level: 0.7333333333333333 | exploration level: 0.8141789886048549
-local iteration: 90 | coverage level: 0.6666666666666666 | exploration level: 0.8176249554949766
-local iteration: 100 | coverage level: 0.8076923076923077 | exploration level: 0.8211937460986681
------ Starting simulation [local-constant-True--BS False] : 17 @ 2025-06-26 09:00:20.014452-----
-local iteration: 10 | coverage level: 0.26666666666666666 | exploration level: 0.617040873824409
-local iteration: 20 | coverage level: 0.3333333333333333 | exploration level: 0.6596748642263895
-local iteration: 30 | coverage level: 0.4666666666666667 | exploration level: 0.6944898676953971
-local iteration: 40 | coverage level: 0.4666666666666667 | exploration level: 0.7105701866069161
-local iteration: 50 | coverage level: 0.5333333333333333 | exploration level: 0.7123993715732946
-local iteration: 60 | coverage level: 0.5666666666666667 | exploration level: 0.7098341899251329
-local iteration: 70 | coverage level: 0.6333333333333333 | exploration level: 0.7011335873874086
-local iteration: 80 | coverage level: 0.6333333333333333 | exploration level: 0.689677115311141
-local iteration: 90 | coverage level: 0.5333333333333333 | exploration level: 0.6995679617397079
-local iteration: 100 | coverage level: 0.46153846153846156 | exploration level: 0.7054063445710329
------ Starting simulation [local-constant-False--BS True] : 17 @ 2025-06-26 09:03:10.134269-----
-local iteration: 10 | coverage level: 0.6333333333333333
-local iteration: 20 | coverage level: 0.8
-local iteration: 30 | coverage level: 0.7666666666666667
-local iteration: 40 | coverage level: 0.7666666666666667
-local iteration: 50 | coverage level: 0.7
-local iteration: 60 | coverage level: 0.8666666666666667
-local iteration: 70 | coverage level: 0.8666666666666667
-local iteration: 80 | coverage level: 0.7333333333333333
-local iteration: 90 | coverage level: 0.8666666666666667
-local iteration: 100 | coverage level: 0.8846153846153846
------ Starting simulation [local-constant-False--BS False] : 17 @ 2025-06-26 09:03:24.679385-----
-local iteration: 10 | coverage level: 0.3333333333333333
-local iteration: 20 | coverage level: 0.3333333333333333
-local iteration: 30 | coverage level: 0.4
-local iteration: 40 | coverage level: 0.5
-local iteration: 50 | coverage level: 0.4666666666666667
-local iteration: 60 | coverage level: 0.5333333333333333
-local iteration: 70 | coverage level: 0.5333333333333333
-local iteration: 80 | coverage level: 0.4666666666666667
-local iteration: 90 | coverage level: 0.5333333333333333
-local iteration: 100 | coverage level: 0.5
------ Starting simulation [local-constant-True--BS True] : 18 @ 2025-06-26 09:03:38.287150-----
-local iteration: 10 | coverage level: 0.7666666666666667 | exploration level: 0.7774402169229686
-local iteration: 20 | coverage level: 0.8666666666666667 | exploration level: 0.8038371399226424
+Simulations begin: 2025-06-26 19:01:09.450212
+----- Starting simulation [systematic-constant] : 11 @ 2025-06-26 19:01:09.450302-----
+systematic iteration: 10 | coverage level: 0.7 | exploration level: 0.7461844046317552
+systematic iteration: 20 | coverage level: 0.7666666666666667 | exploration level: 0.7514074943395648
+systematic iteration: 30 | coverage level: 0.7333333333333333 | exploration level: 0.7578467522484073
+systematic iteration: 40 | coverage level: 0.7 | exploration level: 0.767097438458243
+systematic iteration: 50 | coverage level: 0.8333333333333334 | exploration level: 0.7877199053710107
+systematic iteration: 60 | coverage level: 0.8666666666666667 | exploration level: 0.7974370715201375
+systematic iteration: 70 | coverage level: 0.7666666666666667 | exploration level: 0.801960748962034
+systematic iteration: 80 | coverage level: 0.9333333333333333 | exploration level: 0.787076718906705
+systematic iteration: 90 | coverage level: 0.8 | exploration level: 0.7789897391895482
+systematic iteration: 100 | coverage level: 0.6428571428571429 | exploration level: 0.7723810611900365
+----- Starting simulation [local-constant] : 11 @ 2025-06-26 19:04:20.059251-----
+local iteration: 10 | coverage level: 0.6666666666666666 | exploration level: 0.7647194458461817
+local iteration: 20 | coverage level: 0.6333333333333333 | exploration level: 0.8022213388046288
+local iteration: 30 | coverage level: 0.8 | exploration level: 0.8161664349878291
+local iteration: 40 | coverage level: 0.8 | exploration level: 0.8167526961652652
+local iteration: 50 | coverage level: 0.9 | exploration level: 0.8209667662933562
+local iteration: 60 | coverage level: 0.8333333333333334 | exploration level: 0.8217887741826589
+local iteration: 70 | coverage level: 0.8 | exploration level: 0.8146932037927528
+local iteration: 80 | coverage level: 0.8333333333333334 | exploration level: 0.8070979564420577
+local iteration: 90 | coverage level: 0.9 | exploration level: 0.8080584022050427
+local iteration: 100 | coverage level: 0.8928571428571429 | exploration level: 0.8077145624094062
+----- Starting simulation [annealing forward-constant] : 11 @ 2025-06-26 19:07:07.904953-----
+annealing forward iteration: 10 | coverage level: 0.6333333333333333 | exploration level: 0.7479985498143845
+annealing forward iteration: 20 | coverage level: 0.6333333333333333 | exploration level: 0.7687091906305056
+annealing forward iteration: 30 | coverage level: 0.6333333333333333 | exploration level: 0.7840513779979514
+annealing forward iteration: 40 | coverage level: 0.8 | exploration level: 0.7927984884419401
+annealing forward iteration: 50 | coverage level: 0.8 | exploration level: 0.7869816276438134
+annealing forward iteration: 60 | coverage level: 0.9 | exploration level: 0.7875030448178162
+annealing forward iteration: 70 | coverage level: 0.8 | exploration level: 0.7901845640962618
+annealing forward iteration: 80 | coverage level: 0.9 | exploration level: 0.7833928382038076
+annealing forward iteration: 90 | coverage level: 0.9333333333333333 | exploration level: 0.7821715482960875
+annealing forward iteration: 100 | coverage level: 0.9285714285714286 | exploration level: 0.7823306852176847
+----- Starting simulation [annealing reverse-constant] : 11 @ 2025-06-26 19:10:03.166335-----
+annealing reverse iteration: 10 | coverage level: 0.5333333333333333 | exploration level: 0.7608540598050351
+annealing reverse iteration: 20 | coverage level: 0.6666666666666666 | exploration level: 0.7869916278670738
+annealing reverse iteration: 30 | coverage level: 0.9 | exploration level: 0.8070327943910225
+annealing reverse iteration: 40 | coverage level: 0.8333333333333334 | exploration level: 0.8114506304378531
+annealing reverse iteration: 50 | coverage level: 0.8 | exploration level: 0.8084430626286466
+annealing reverse iteration: 60 | coverage level: 0.8 | exploration level: 0.8196951844068883
+annealing reverse iteration: 70 | coverage level: 0.8666666666666667 | exploration level: 0.8172134897543478
+annealing reverse iteration: 80 | coverage level: 0.8666666666666667 | exploration level: 0.8138558582310896
+annealing reverse iteration: 90 | coverage level: 0.9 | exploration level: 0.8186807520852187
+annealing reverse iteration: 100 | coverage level: 0.8571428571428571 | exploration level: 0.818092320848626
+----- Starting simulation [penalty-constant] : 11 @ 2025-06-26 19:12:56.121663-----
+penalty iteration: 10 | coverage level: 0.6666666666666666 | exploration level: 0.7468090594610316
+penalty iteration: 20 | coverage level: 0.7666666666666667 | exploration level: 0.7593619692187864
+penalty iteration: 30 | coverage level: 0.6333333333333333 | exploration level: 0.7686912811915403
+penalty iteration: 40 | coverage level: 0.7 | exploration level: 0.7688639821447136
+penalty iteration: 50 | coverage level: 0.7333333333333333 | exploration level: 0.7723773872488446
+penalty iteration: 60 | coverage level: 0.8333333333333334 | exploration level: 0.785000410836872
+penalty iteration: 70 | coverage level: 0.8666666666666667 | exploration level: 0.7851856014286939
+penalty iteration: 80 | coverage level: 0.8 | exploration level: 0.7745436378748928
+penalty iteration: 90 | coverage level: 0.9333333333333333 | exploration level: 0.765808977688362
+penalty iteration: 100 | coverage level: 0.8928571428571429 | exploration level: 0.7628271185396757
+----- Starting simulation [systematic-constant] : 12 @ 2025-06-26 19:16:08.739346-----
+systematic iteration: 10 | coverage level: 0.7 | exploration level: 0.6980392634413713
+systematic iteration: 20 | coverage level: 0.5333333333333333 | exploration level: 0.7017414049751872
+systematic iteration: 30 | coverage level: 0.7 | exploration level: 0.7342332599313323
+systematic iteration: 40 | coverage level: 0.8 | exploration level: 0.7389941107043022
+systematic iteration: 50 | coverage level: 0.7333333333333333 | exploration level: 0.7457992302605118
+systematic iteration: 60 | coverage level: 0.8 | exploration level: 0.7649903782206506
+systematic iteration: 70 | coverage level: 0.7666666666666667 | exploration level: 0.7715254421464732
+systematic iteration: 80 | coverage level: 0.8666666666666667 | exploration level: 0.7782043922023042
+systematic iteration: 90 | coverage level: 0.8333333333333334 | exploration level: 0.7816516148059244
+systematic iteration: 100 | coverage level: 0.8928571428571429 | exploration level: 0.7873604864989293
+----- Starting simulation [local-constant] : 12 @ 2025-06-26 19:19:20.425323-----
+local iteration: 10 | coverage level: 0.6 | exploration level: 0.7185189608550491
+local iteration: 20 | coverage level: 0.7333333333333333 | exploration level: 0.736741737969991
+local iteration: 30 | coverage level: 0.6666666666666666 | exploration level: 0.7499339789694149
+local iteration: 40 | coverage level: 0.7333333333333333 | exploration level: 0.7525407472665364
+local iteration: 50 | coverage level: 0.7666666666666667 | exploration level: 0.7595156083171504
+local iteration: 60 | coverage level: 0.8 | exploration level: 0.7743993601293959
+local iteration: 70 | coverage level: 0.8333333333333334 | exploration level: 0.7807563110917813
+local iteration: 80 | coverage level: 0.8666666666666667 | exploration level: 0.7958663488996013
+local iteration: 90 | coverage level: 0.8666666666666667 | exploration level: 0.7969669511028689
+local iteration: 100 | coverage level: 0.8571428571428571 | exploration level: 0.7988206505568101
+----- Starting simulation [annealing forward-constant] : 12 @ 2025-06-26 19:22:08.146674-----
+annealing forward iteration: 10 | coverage level: 0.6333333333333333 | exploration level: 0.7115685349425808
+annealing forward iteration: 20 | coverage level: 0.7666666666666667 | exploration level: 0.7203973593416673
+annealing forward iteration: 30 | coverage level: 0.7666666666666667 | exploration level: 0.7284307543815132
+annealing forward iteration: 40 | coverage level: 0.7333333333333333 | exploration level: 0.7426388412832627
+annealing forward iteration: 50 | coverage level: 0.7666666666666667 | exploration level: 0.7613970049679912
+annealing forward iteration: 60 | coverage level: 0.7666666666666667 | exploration level: 0.7702521024127635
+annealing forward iteration: 70 | coverage level: 0.9 | exploration level: 0.7796962342826046
+annealing forward iteration: 80 | coverage level: 0.9666666666666667 | exploration level: 0.7971638593992302
+annealing forward iteration: 90 | coverage level: 0.8333333333333334 | exploration level: 0.7995203305830961
+annealing forward iteration: 100 | coverage level: 0.8928571428571429 | exploration level: 0.7990123146290483
+----- Starting simulation [annealing reverse-constant] : 12 @ 2025-06-26 19:25:03.942702-----
+annealing reverse iteration: 10 | coverage level: 0.6 | exploration level: 0.7236065834845639
+annealing reverse iteration: 20 | coverage level: 0.7333333333333333 | exploration level: 0.7493114270844646
+annealing reverse iteration: 30 | coverage level: 0.7333333333333333 | exploration level: 0.7606507208367816
+annealing reverse iteration: 40 | coverage level: 0.8333333333333334 | exploration level: 0.7646154286753827
+annealing reverse iteration: 50 | coverage level: 0.7666666666666667 | exploration level: 0.7698870122863531
+annealing reverse iteration: 60 | coverage level: 0.9 | exploration level: 0.7694708835866606
+annealing reverse iteration: 70 | coverage level: 0.8 | exploration level: 0.7727636654263647
+annealing reverse iteration: 80 | coverage level: 0.8333333333333334 | exploration level: 0.7798242326805518
+annealing reverse iteration: 90 | coverage level: 0.8333333333333334 | exploration level: 0.7911855495849245
+annealing reverse iteration: 100 | coverage level: 0.8214285714285714 | exploration level: 0.7986363095972421
+----- Starting simulation [penalty-constant] : 12 @ 2025-06-26 19:27:57.608397-----
+penalty iteration: 10 | coverage level: 0.6333333333333333 | exploration level: 0.7136360192431659
+penalty iteration: 20 | coverage level: 0.7333333333333333 | exploration level: 0.7195666642468532
+penalty iteration: 30 | coverage level: 0.6666666666666666 | exploration level: 0.7303092121645994
+penalty iteration: 40 | coverage level: 0.8 | exploration level: 0.7402689238253738
+penalty iteration: 50 | coverage level: 0.6333333333333333 | exploration level: 0.7453970149641487
+penalty iteration: 60 | coverage level: 0.7333333333333333 | exploration level: 0.754366076548711
+penalty iteration: 70 | coverage level: 0.7 | exploration level: 0.7524819368052071
+penalty iteration: 80 | coverage level: 0.7333333333333333 | exploration level: 0.7525112617255518
+penalty iteration: 90 | coverage level: 0.8333333333333334 | exploration level: 0.7535164119706751
+penalty iteration: 100 | coverage level: 0.7857142857142857 | exploration level: 0.7572737336301852
+----- Starting simulation [systematic-constant] : 13 @ 2025-06-26 19:31:13.752125-----
+systematic iteration: 10 | coverage level: 0.5 | exploration level: 0.7191827597366343
+systematic iteration: 20 | coverage level: 0.6 | exploration level: 0.7315866802977744
+systematic iteration: 30 | coverage level: 0.7 | exploration level: 0.7561267209134775
+systematic iteration: 40 | coverage level: 0.8 | exploration level: 0.7732085646067908
+systematic iteration: 50 | coverage level: 0.7666666666666667 | exploration level: 0.7973723450268925
+systematic iteration: 60 | coverage level: 0.8333333333333334 | exploration level: 0.8005931144825773
+systematic iteration: 70 | coverage level: 0.7666666666666667 | exploration level: 0.8089426034311227
+systematic iteration: 80 | coverage level: 0.7333333333333333 | exploration level: 0.8005323832099228
+systematic iteration: 90 | coverage level: 0.8333333333333334 | exploration level: 0.795115853395288
+systematic iteration: 100 | coverage level: 0.896551724137931 | exploration level: 0.7895097210042016
+----- Starting simulation [local-constant] : 13 @ 2025-06-26 19:34:25.511817-----
+local iteration: 10 | coverage level: 0.5 | exploration level: 0.7350700925804586
+local iteration: 20 | coverage level: 0.6666666666666666 | exploration level: 0.7675138034811888
+local iteration: 30 | coverage level: 0.6 | exploration level: 0.7910590159667195
+local iteration: 40 | coverage level: 0.6666666666666666 | exploration level: 0.8022722838288425
+local iteration: 50 | coverage level: 0.7666666666666667 | exploration level: 0.8062637148912143
+local iteration: 60 | coverage level: 0.9 | exploration level: 0.811942250027916
+local iteration: 70 | coverage level: 0.8666666666666667 | exploration level: 0.8174790862268555
+local iteration: 80 | coverage level: 0.9 | exploration level: 0.820514564613264
+local iteration: 90 | coverage level: 0.8333333333333334 | exploration level: 0.8230345428394731
+local iteration: 100 | coverage level: 0.896551724137931 | exploration level: 0.8159130670376875
+----- Starting simulation [annealing forward-constant] : 13 @ 2025-06-26 19:37:13.524979-----
+annealing forward iteration: 10 | coverage level: 0.4666666666666667 | exploration level: 0.697790380659345
+annealing forward iteration: 20 | coverage level: 0.6333333333333333 | exploration level: 0.706377522128644
+annealing forward iteration: 30 | coverage level: 0.6333333333333333 | exploration level: 0.7448086224693968
+annealing forward iteration: 40 | coverage level: 0.6666666666666666 | exploration level: 0.7684129308111293
+annealing forward iteration: 50 | coverage level: 0.7333333333333333 | exploration level: 0.782641057746584
+annealing forward iteration: 60 | coverage level: 0.8 | exploration level: 0.7865294911725795
+annealing forward iteration: 70 | coverage level: 0.8333333333333334 | exploration level: 0.7961951595018695
+annealing forward iteration: 80 | coverage level: 0.9 | exploration level: 0.8039300065664443
+annealing forward iteration: 90 | coverage level: 0.7333333333333333 | exploration level: 0.8011002060275791
+annealing forward iteration: 100 | coverage level: 0.8275862068965517 | exploration level: 0.7982525720600157
+----- Starting simulation [annealing reverse-constant] : 13 @ 2025-06-26 19:40:10.030306-----
+annealing reverse iteration: 10 | coverage level: 0.5666666666666667 | exploration level: 0.7445030752975357
+annealing reverse iteration: 20 | coverage level: 0.7 | exploration level: 0.7847206316746612
+annealing reverse iteration: 30 | coverage level: 0.8 | exploration level: 0.8071743520716381
+annealing reverse iteration: 40 | coverage level: 0.7666666666666667 | exploration level: 0.8049365363361389
+annealing reverse iteration: 50 | coverage level: 0.7333333333333333 | exploration level: 0.8035502189276722
+annealing reverse iteration: 60 | coverage level: 0.8333333333333334 | exploration level: 0.7993570960649308
+annealing reverse iteration: 70 | coverage level: 0.7666666666666667 | exploration level: 0.8021766697521808
+annealing reverse iteration: 80 | coverage level: 0.8333333333333334 | exploration level: 0.8056454802374213
+annealing reverse iteration: 90 | coverage level: 0.8666666666666667 | exploration level: 0.8211160427101113
+annealing reverse iteration: 100 | coverage level: 0.8620689655172413 | exploration level: 0.8277840235054932
+----- Starting simulation [penalty-constant] : 13 @ 2025-06-26 19:43:03.577823-----
+penalty iteration: 10 | coverage level: 0.6 | exploration level: 0.7057389048440584
+penalty iteration: 20 | coverage level: 0.5 | exploration level: 0.7105174289337602
+penalty iteration: 30 | coverage level: 0.6333333333333333 | exploration level: 0.7233106474311916
+penalty iteration: 40 | coverage level: 0.6 | exploration level: 0.7350921124574207
+penalty iteration: 50 | coverage level: 0.7 | exploration level: 0.7689488155724769
+penalty iteration: 60 | coverage level: 0.7 | exploration level: 0.7843657325088624
+penalty iteration: 70 | coverage level: 0.8666666666666667 | exploration level: 0.7847282064728806
+penalty iteration: 80 | coverage level: 0.7 | exploration level: 0.7834371830847268
+penalty iteration: 90 | coverage level: 0.6666666666666666 | exploration level: 0.776133931664653
+penalty iteration: 100 | coverage level: 0.7931034482758621 | exploration level: 0.7714102966164168
+----- Starting simulation [systematic-constant] : 14 @ 2025-06-26 19:46:18.825758-----
+systematic iteration: 10 | coverage level: 0.26666666666666666 | exploration level: 0.6476961559307379
+systematic iteration: 20 | coverage level: 0.4666666666666667 | exploration level: 0.6367776780871295
+systematic iteration: 30 | coverage level: 0.43333333333333335 | exploration level: 0.6288785444318141
+systematic iteration: 40 | coverage level: 0.5666666666666667 | exploration level: 0.6385180758307504
+systematic iteration: 50 | coverage level: 0.6 | exploration level: 0.6540442539857622
+systematic iteration: 60 | coverage level: 0.7666666666666667 | exploration level: 0.6904813127441621
+systematic iteration: 70 | coverage level: 0.7333333333333333 | exploration level: 0.7152858315907283
+systematic iteration: 80 | coverage level: 0.6333333333333333 | exploration level: 0.7233431385916679
+systematic iteration: 90 | coverage level: 0.8666666666666667 | exploration level: 0.7431516713496588
+systematic iteration: 100 | coverage level: 0.8148148148148148 | exploration level: 0.7702015797918476
+----- Starting simulation [local-constant] : 14 @ 2025-06-26 19:49:57.179818-----
+local iteration: 10 | coverage level: 0.3333333333333333 | exploration level: 0.6606402168742088
+local iteration: 20 | coverage level: 0.7 | exploration level: 0.6683568830882352
+local iteration: 30 | coverage level: 0.6333333333333333 | exploration level: 0.6900172573056724
+local iteration: 40 | coverage level: 0.7666666666666667 | exploration level: 0.7183439537016462
+local iteration: 50 | coverage level: 0.7 | exploration level: 0.7470870975073555
+local iteration: 60 | coverage level: 0.7666666666666667 | exploration level: 0.752999156998605
+local iteration: 70 | coverage level: 0.8333333333333334 | exploration level: 0.760639867984145
+local iteration: 80 | coverage level: 0.7666666666666667 | exploration level: 0.7648406344035081
+local iteration: 90 | coverage level: 0.7666666666666667 | exploration level: 0.7684828281041717
+local iteration: 100 | coverage level: 0.8518518518518519 | exploration level: 0.7752446420512505
+----- Starting simulation [annealing forward-constant] : 14 @ 2025-06-26 19:52:47.878670-----
+annealing forward iteration: 10 | coverage level: 0.4666666666666667 | exploration level: 0.6490294877533689
+annealing forward iteration: 20 | coverage level: 0.5 | exploration level: 0.6503664394289567
+annealing forward iteration: 30 | coverage level: 0.4666666666666667 | exploration level: 0.6459657320116359
+annealing forward iteration: 40 | coverage level: 0.6666666666666666 | exploration level: 0.6540291821886655
+annealing forward iteration: 50 | coverage level: 0.6 | exploration level: 0.6828298491114774
+annealing forward iteration: 60 | coverage level: 0.6 | exploration level: 0.6991024998639241
+annealing forward iteration: 70 | coverage level: 0.7333333333333333 | exploration level: 0.7344160250354235
+annealing forward iteration: 80 | coverage level: 0.7666666666666667 | exploration level: 0.754577623355279
+annealing forward iteration: 90 | coverage level: 0.8333333333333334 | exploration level: 0.7574264010979385
+annealing forward iteration: 100 | coverage level: 0.6666666666666666 | exploration level: 0.7724615383282107
+----- Starting simulation [annealing reverse-constant] : 14 @ 2025-06-26 19:55:51.831724-----
+annealing reverse iteration: 10 | coverage level: 0.4 | exploration level: 0.6642257721532212
+annealing reverse iteration: 20 | coverage level: 0.6 | exploration level: 0.6635830580481422
+annealing reverse iteration: 30 | coverage level: 0.6333333333333333 | exploration level: 0.6846309811335103
+annealing reverse iteration: 40 | coverage level: 0.7 | exploration level: 0.7012625771052122
+annealing reverse iteration: 50 | coverage level: 0.7666666666666667 | exploration level: 0.7162919674874434
+annealing reverse iteration: 60 | coverage level: 0.8 | exploration level: 0.7468051302749628
+annealing reverse iteration: 70 | coverage level: 0.8 | exploration level: 0.7740552731254262
+annealing reverse iteration: 80 | coverage level: 0.7333333333333333 | exploration level: 0.7903521389122206
+annealing reverse iteration: 90 | coverage level: 0.7666666666666667 | exploration level: 0.8015808430400628
+annealing reverse iteration: 100 | coverage level: 0.7407407407407407 | exploration level: 0.7997714700691234
+----- Starting simulation [penalty-constant] : 14 @ 2025-06-26 19:58:48.701779-----
+penalty iteration: 10 | coverage level: 0.43333333333333335 | exploration level: 0.6483814616113649
+penalty iteration: 20 | coverage level: 0.4 | exploration level: 0.6374820281005181
+penalty iteration: 30 | coverage level: 0.5 | exploration level: 0.6402635586334796
+penalty iteration: 40 | coverage level: 0.5 | exploration level: 0.6333684744176128
+penalty iteration: 50 | coverage level: 0.6666666666666666 | exploration level: 0.6821937831044523
+penalty iteration: 60 | coverage level: 0.7 | exploration level: 0.7127871267881969
+penalty iteration: 70 | coverage level: 0.7666666666666667 | exploration level: 0.7427838376247501
+penalty iteration: 80 | coverage level: 0.7333333333333333 | exploration level: 0.7642072790966863
+penalty iteration: 90 | coverage level: 0.6 | exploration level: 0.7650474507194767
+penalty iteration: 100 | coverage level: 0.6666666666666666 | exploration level: 0.7689665836580093
+----- Starting simulation [systematic-constant] : 15 @ 2025-06-26 20:02:17.262619-----
+systematic iteration: 10 | coverage level: 0.7 | exploration level: 0.7187731581040121
+systematic iteration: 20 | coverage level: 0.7666666666666667 | exploration level: 0.7299498249934757
+systematic iteration: 30 | coverage level: 0.7666666666666667 | exploration level: 0.7395966819635003
+systematic iteration: 40 | coverage level: 0.9 | exploration level: 0.7527837402609829
+systematic iteration: 50 | coverage level: 0.8 | exploration level: 0.7629677565259809
+systematic iteration: 60 | coverage level: 0.7666666666666667 | exploration level: 0.7822311956918437
+systematic iteration: 70 | coverage level: 0.8 | exploration level: 0.7890479777973318
+systematic iteration: 80 | coverage level: 0.8333333333333334 | exploration level: 0.7865006621025362
+systematic iteration: 90 | coverage level: 0.8 | exploration level: 0.7834603718879356
+systematic iteration: 100 | coverage level: 0.8518518518518519 | exploration level: 0.7751477385419983
+----- Starting simulation [local-constant] : 15 @ 2025-06-26 20:05:51.246015-----
+local iteration: 10 | coverage level: 0.6333333333333333 | exploration level: 0.7229494197623366
+local iteration: 20 | coverage level: 0.6333333333333333 | exploration level: 0.7363983878436114
+local iteration: 30 | coverage level: 0.7 | exploration level: 0.743496218256795
+local iteration: 40 | coverage level: 0.8 | exploration level: 0.7527731438280689
+local iteration: 50 | coverage level: 0.7 | exploration level: 0.7744235890392874
+local iteration: 60 | coverage level: 0.8333333333333334 | exploration level: 0.7850225533773881
+local iteration: 70 | coverage level: 0.9333333333333333 | exploration level: 0.7980240542892277
+local iteration: 80 | coverage level: 0.9333333333333333 | exploration level: 0.803814893214498
+local iteration: 90 | coverage level: 0.8666666666666667 | exploration level: 0.8117612011923504
+local iteration: 100 | coverage level: 0.9629629629629629 | exploration level: 0.8184418383495621
+----- Starting simulation [annealing forward-constant] : 15 @ 2025-06-26 20:08:40.527582-----
+annealing forward iteration: 10 | coverage level: 0.7 | exploration level: 0.71454929801569
+annealing forward iteration: 20 | coverage level: 0.8 | exploration level: 0.7322380306498365
+annealing forward iteration: 30 | coverage level: 0.8333333333333334 | exploration level: 0.750996189131845
+annealing forward iteration: 40 | coverage level: 0.8 | exploration level: 0.7640335255057337
+annealing forward iteration: 50 | coverage level: 0.6666666666666666 | exploration level: 0.7863680526660044
+annealing forward iteration: 60 | coverage level: 0.8 | exploration level: 0.807986504756545
+annealing forward iteration: 70 | coverage level: 0.9 | exploration level: 0.8208185317999265
+annealing forward iteration: 80 | coverage level: 0.9 | exploration level: 0.8242866595580368
+annealing forward iteration: 90 | coverage level: 0.8333333333333334 | exploration level: 0.8180683385149023
+annealing forward iteration: 100 | coverage level: 0.8148148148148148 | exploration level: 0.8149320059643173
+----- Starting simulation [annealing reverse-constant] : 15 @ 2025-06-26 20:11:39.485353-----
+annealing reverse iteration: 10 | coverage level: 0.7333333333333333 | exploration level: 0.727984756099354
+annealing reverse iteration: 20 | coverage level: 0.7333333333333333 | exploration level: 0.744906970378142
+annealing reverse iteration: 30 | coverage level: 0.8333333333333334 | exploration level: 0.7589777637334005
+annealing reverse iteration: 40 | coverage level: 0.7 | exploration level: 0.7671763337273227
+annealing reverse iteration: 50 | coverage level: 0.9 | exploration level: 0.7911366297159653
+annealing reverse iteration: 60 | coverage level: 0.8666666666666667 | exploration level: 0.8036043728730988
+annealing reverse iteration: 70 | coverage level: 0.8666666666666667 | exploration level: 0.8094573987012965
+annealing reverse iteration: 80 | coverage level: 0.8666666666666667 | exploration level: 0.8153400194673746
+annealing reverse iteration: 90 | coverage level: 0.9 | exploration level: 0.8266796571038292
+annealing reverse iteration: 100 | coverage level: 0.8518518518518519 | exploration level: 0.8259212696365906
+----- Starting simulation [penalty-constant] : 15 @ 2025-06-26 20:14:33.931464-----
+penalty iteration: 10 | coverage level: 0.6 | exploration level: 0.7194381475770402
+penalty iteration: 20 | coverage level: 0.7 | exploration level: 0.7283241284162777
+penalty iteration: 30 | coverage level: 0.7666666666666667 | exploration level: 0.7383124956257264
+penalty iteration: 40 | coverage level: 0.7333333333333333 | exploration level: 0.7481555384187485
+penalty iteration: 50 | coverage level: 0.7 | exploration level: 0.7531085875083854
+penalty iteration: 60 | coverage level: 0.8 | exploration level: 0.7628672484472594
+penalty iteration: 70 | coverage level: 0.8 | exploration level: 0.7756055718027791
+penalty iteration: 80 | coverage level: 0.9 | exploration level: 0.7729557980208911
+penalty iteration: 90 | coverage level: 0.9 | exploration level: 0.7716843340629905
+penalty iteration: 100 | coverage level: 0.7777777777777778 | exploration level: 0.7642677179225609
+----- Starting simulation [systematic-constant] : 16 @ 2025-06-26 20:18:36.579705-----
