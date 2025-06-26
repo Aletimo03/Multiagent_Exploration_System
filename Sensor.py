@@ -99,10 +99,10 @@ class Base_station(Sensor):
             transmitting_power = 30  # watts (between 20-40 W)
         elif scenario == "Urban":
             altitude = 75  # meters (between 50-100 m)
-            transmitting_power = 15  # watts (between 10-20 W)
+            transmitting_power = 10  # watts (between 10-20 W)
         elif scenario == "Dense Urban":
             altitude = 125  # meters (between 100-150 m)
-            transmitting_power = 7.5  # watts (between 5-10 W)
+            transmitting_power = 5  # watts (between 5-10 W)
         elif scenario == "Highrise Urban":
             altitude = 250  # meters (between 150-300 m)
             transmitting_power = 3  # watts (between 1-5 W)
