@@ -3,6 +3,18 @@ import pickle
 import statistics
 from Constants import *
 from Plots import plot_coverage, plot_coverages_comparison, plot_exploration_comparison
+from scipy.signal import savgol_filter
+
+def smooth_curve(data, window_length=11, polyorder=3):
+    """
+    Smooths the data using Savitzky-Golay filter.
+    """
+    if len(data) < window_length:
+        return data  # Not enough data to smooth
+    return savgol_filter(data, window_length=window_length, polyorder=polyorder).tolist()
+
+
+USE_SMOOTHING = True
 
 # Define types of search
 types_of_search = ["systematic", "local", "annealing forward", "annealing reverse", "penalty"]
@@ -18,7 +30,7 @@ print(f"Project root resolved to: {project_root}\n")
 # Load data from files
 for search_type in types_of_search:
     print(f"Processing {search_type} search:")
-    for j in range(NUM_OF_SIMULATIONS):
+    for j in range(30): # or NUM_SIMULATION
         base_path = os.path.join(project_root, f"Experiment results/experiment2/{search_type} search/{j}")
         cov_path = os.path.join(base_path, "coverages.p")
         expl_path = os.path.join(base_path, "exploration_levels.p")
@@ -84,15 +96,26 @@ print("\nAveraging complete.\n")
 output_path = os.path.join(project_root, "Experiment results/experiment2/")
 print(f"Plotting results to: {output_path}")
 
+if USE_SMOOTHING:
+    smoothed_coverages = {
+        k: smooth_curve(v, window_length=15, polyorder=3) for k, v in average_coverages.items()
+    }
+    smoothed_explorations = {
+        k: smooth_curve(v, window_length=15, polyorder=3) for k, v in average_explorations.items()
+    }
+else:
+    smoothed_coverages = average_coverages
+    smoothed_explorations = average_explorations
+
+# Plot using smoothed data
 plot_coverages_comparison(
-    average_coverages.values(),
-    ["systematic", "local", "annealing forward", "annealing reverse", "penalty"],
+    smoothed_coverages.values(),
+    list(smoothed_coverages.keys()),
     path=output_path
 )
 
 plot_exploration_comparison(
-    average_explorations.values(),
-    ["systematic", "local", "annealing forward", "annealing reverse", "penalty"],
+    smoothed_explorations.values(),
+    list(smoothed_explorations.keys()),
     path=output_path
 )
-
