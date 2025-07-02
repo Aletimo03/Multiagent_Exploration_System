@@ -24,7 +24,7 @@ def goal_worker(args):
 
 
 def simulate(type_of_search, expl_weight, num_of_iter, deserialize,
-             use_expl, use_bs, experiment_id, use_custom_prob=False):
+             use_expl, use_bs, experiment_id, use_custom_prob=False, high_var=None):
     """
     Run simulation with given parameters.
     """
@@ -73,10 +73,10 @@ def simulate(type_of_search, expl_weight, num_of_iter, deserialize,
         use_custom_prob=use_custom_prob
     )
 
-    cf = Control_function(area, base_stations, agents, users, dto)
+    cf = Control_function(area, base_stations, agents, users, dto, high_var)
 
     print("Initializing LoS matrix...")
-    cf.initialize_LoS_matrix()
+    cf.initialize_LoS_matrix(deserialize=deserialize)
     print("Finished initializing LoS matrix")
 
     current_reward = cf.RCR_after_move()
@@ -118,6 +118,8 @@ def simulate(type_of_search, expl_weight, num_of_iter, deserialize,
                     agent.goal_point = cf.find_goal_point_for_agent(agent, other_agents, t)
 
             cf.move_agents()
+            cf.update_LoS_matrix()
+            print("UPDATE LOS MATRIX")
             current_reward = cf.RCR_after_move()
             coverage_levels.append(current_reward)
 
@@ -150,11 +152,18 @@ def simulate(type_of_search, expl_weight, num_of_iter, deserialize,
         print(f"Final exploration level: {current_expl}")
     print(f"Simulation with desired coverage level: {DESIRED_COVERAGE_LEVEL}")
 
-    # Map experiment id to folder path template
+    def get_experiment3_path(use_custom_prob, high_var, num_of_iter):
+        if not use_custom_prob:
+            return f"Experiment results/experiment3/custom prob False/{num_of_iter}"
+        elif high_var is False:
+            return f"Experiment results/experiment3/custom prob True/low variability/{num_of_iter}"
+        else:
+            return f"Experiment results/experiment3/custom prob True/high variability/{num_of_iter}"
+
     experiment_paths = {
         1: f"Experiment results/experiment1/expl {use_expl}/BS {use_bs}/{num_of_iter}",
         2: f"Experiment results/experiment2/{type_of_search} search/{num_of_iter}",
-        3: f"Experiment results/experiment3/custom prob {use_custom_prob}/{num_of_iter}",
+        3: get_experiment3_path(use_custom_prob, high_var, num_of_iter),
     }
 
     exp_path = experiment_paths.get(experiment_id)
