@@ -15,7 +15,7 @@ explorations = {True: [], False: []}
 # Load all data
 for expl in [True, False]:
     for bs in [True, False]:
-        for i in range(NUM_OF_SIMULATIONS):
+        for i in range(10): # or NUM_SIMULATION
             base_path = os.path.join(project_root, f"Experiment results/experiment1/expl {expl}/BS {bs}/{i}")
             cov_path = os.path.join(base_path, "coverages.p")
             expl_path = os.path.join(base_path, "exploration_levels.p")
@@ -91,6 +91,7 @@ min_starting_cov = min(min_starting_coverages)
 
 # Plot coverage comparison
 fig, ax = plt.subplots(1, 2, figsize=(10, 5), constrained_layout=True)
+
 ax[0].set_xlabel("Iteration")
 ax[0].set_ylabel("Coverage")
 ax[0].set_ylim(min_starting_cov, 1)
@@ -98,6 +99,7 @@ ax[0].plot(range(len(avg_cov[True][True])), avg_cov[True][True], label="with exp
 ax[0].plot(range(len(avg_cov[False][True])), avg_cov[False][True], label="without exploration")
 ax[0].legend(loc='lower right')
 ax[0].set_title("Coverage comparison with Base Stations")
+ax[0].set_visible(False) # to hide with BS
 
 ax[1].set_xlabel("Iteration")
 ax[1].set_ylabel("Coverage")
@@ -106,6 +108,7 @@ ax[1].plot(range(len(avg_cov[True][False])), avg_cov[True][False], label="with e
 ax[1].plot(range(len(avg_cov[False][False])), avg_cov[False][False], label="without exploration")
 ax[1].legend(loc='lower right')
 ax[1].set_title("Coverage comparison without Base Stations")
+#ax[1].set_visible(False)
 
 fig_path_cov = os.path.join(project_root, "Experiment results/experiment1/coverage_comparison.png")
 fig.savefig(fig_path_cov, bbox_inches='tight')
