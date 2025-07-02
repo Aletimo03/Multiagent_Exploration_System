@@ -9,7 +9,7 @@ import json
 from MCplGen_v3 import *
 
 class Control_function:
-    def __init__(self, area, base_stations, agents, users, dto):
+    def __init__(self, area, base_stations, agents, users, dto,high_var=None):
         # initialization of all actors in the simulation
         self.area = area
         self.base_stations = base_stations
@@ -27,8 +27,15 @@ class Control_function:
 
         self.use_custom_prob = dto.use_custom_prob
         if dto.use_custom_prob:
-            with open('custom_probs.json', 'r') as f:
-                self.custom_prob = json.load(f)
+            if high_var is True:
+                with open('custom_probs_high_var.json', 'r') as f:
+                    self.custom_prob = json.load(f)
+            elif high_var is False:
+                with open('custom_probs_low_var.json', 'r') as f:
+                    self.custom_prob = json.load(f)
+            else:
+                # high_var is None — skip loading custom probabilities
+                pass
 
         # --------------------------------------------------------------------------------------------------------------
         # attributes for network CONNECTIVITY (useful only if backhaul network isn't available)
@@ -247,7 +254,7 @@ class Control_function:
 
 
 
-    def __update_LoS_matrix(self):
+    def update_LoS_matrix(self):
         """
         Returns a matrix [sensor_id][user_id] with 'LoS' or 'NLoS' values.
         If eval_LoS=True, updates the Markov state using actual motion-based transition.
@@ -292,10 +299,6 @@ class Control_function:
     def __SINR(self, interference_powers, eval_all_users=False,eval_LoS=False):
         SINR_matrix = numpy.zeros((len(self.agents) + len(self.base_stations), len(self.users)))
 
-        #if eval_LoS:
-           # print("UPDATE LOS MATRIX")
-           # self.__update_LoS_matrix()
-
         LoS_matrix=self.__LoS_matrix
 
         for sensor in self.agents + self.base_stations:
@@ -316,10 +319,6 @@ class Control_function:
 
 
                     SINR_matrix[sensor.id][user.id] = sinr
-
-        if eval_LoS:
-            self.__update_LoS_matrix()
-            print("UPDATE LOS MATRIX")
 
 
         return SINR_matrix
@@ -694,9 +693,6 @@ class Control_function:
                                 if (k+1) <= (sup_x -inf_x -1)*(sup_y -inf_y) and cells[k + sup_y - inf_y] != 0:
                                     already_checked_cells.append(k + sup_y - inf_y)
                                 break
-                # using some reference values for SINR:
-                # SINR=0, the cells doesn't contribute to exploration
-                # SINR=1 the cells contribute
 
             max_SINR_per_cell = [max(cell_SINR) for cell_SINR in SINR_matrix]
 
@@ -970,11 +966,20 @@ class Control_function:
 
         return p1
 
-    def initialize_LoS_matrix(self):
+    def initialize_LoS_matrix(self,deserialize=False):
         """
         Initializes the __LoS_matrix using the los_probability() function
         based on elevation angle and scenario-specific parameters.
         """
+        los_file_path = "LoS_data/LoS_matrix.p"
+
+        if deserialize:
+            with open(los_file_path, "rb") as f:
+                self.__LoS_matrix = pickle.load(f)
+            print("[INFO] Loaded LoS matrix from file.")
+            return  # Exit after loading
+
+
         for sensor in self.agents + self.base_stations:
             for user in self.users:
                 d_ij, _, _ = self.__get__MCplGen_parameters(user, sensor)
@@ -1021,3 +1026,7 @@ class Control_function:
              #   print("state:", sensor.id, user.id  , state)
 
                 self.__LoS_matrix[sensor.id][user.id] = state
+
+        with open(los_file_path, "wb") as f:
+         pickle.dump(self.__LoS_matrix, f)
+        print("[INFO] New LoS matrix computed and saved to file.")
