@@ -17,7 +17,7 @@ M = 30  # number of users
 N = 10  # number of agents
 B = 4  # number of base stations
 PENALTY = 1/M  # const for penalty search
-NUM_OF_SIMULATIONS = 20
+NUM_OF_SIMULATIONS = 30
 
 """ Power Spectral Density Noise """
 PSDN=4E-21 # Assuming 290K room temperature   PSDN(decibels relative to 1 milliwatt per Hertz)=-174dBm/Hz
@@ -51,14 +51,14 @@ USER_DISCONNECTION_PROBABILITY = 0.008  # (Pd in the model)
 USER_APPEARANCE_PROBABILITY = 0.015  # (Pn in the model)
 EXPLORATION_CELL_WIDTH = 20  # in meters (default: 20, test: 50)
 EXPLORATION_CELL_HEIGTH = 20  # in meters (default: 20, test: 50)
-EXPLORATION_RADIUS = 200
-NEIGHBOUR_SINR_THRESHOLD = 0.85
+EXPLORATION_RADIUS = 250 # it was 200
+NEIGHBOUR_SINR_THRESHOLD = 15
 DECOUPLING_HISTORY_DEPTH = 5
 COUPLING_DISTANCE = EXPLORATION_CELL_WIDTH * 3
 INIT_PROBABLITY = 0.5
 
 # User movement — realistic human-like walking model
-USER_VELOCITY_MEAN = 2          # m/s — avg. walking speed (slightly reduced for smoother turns)
+USER_VELOCITY_MEAN = 1.4         # m/s — avg. walking speed (slightly reduced for smoother turns)
 USER_VELOCITY_STD = 0.1              # m/s — reduced variability for more stable paths
 USER_ANGULAR_VELOCITY_STD = 0.1     # rad/step — mild angular changes for ~1–2 turns per 30 steps
 
