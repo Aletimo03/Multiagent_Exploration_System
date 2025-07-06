@@ -103,8 +103,8 @@ for label in configs:
     expl_std = np.std(final_expls)
 
     print(f"\n📊 {label.upper()}:")
-    print(f"  Coverage   -> avg: {cov_avg:.2f}, min: {cov_min:.2f}, max: {cov_max:.2f}, std: {cov_std:.2f}")
-    print(f"  Exploration-> avg: {expl_avg:.2f}, min: {expl_min:.2f}, max: {expl_max:.2f}, std: {expl_std:.2f}")
+    print(f"  Coverage   -> avg: {cov_avg:.2f}, min: {cov_min:.2f}, max: {cov_max:.2f}, std: {cov_std:.3f}")
+    print(f"  Exploration-> avg: {expl_avg:.2f}, min: {expl_min:.2f}, max: {expl_max:.2f}, std: {expl_std:.3f}")
 
 # Plot results
 output_path = os.path.join(project_root, "Experiment results/experiment3/")

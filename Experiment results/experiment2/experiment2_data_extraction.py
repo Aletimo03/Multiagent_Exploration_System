@@ -1,121 +1,111 @@
 import os
 import pickle
-import statistics
+import numpy as np
 from Constants import *
-from Plots import plot_coverage, plot_coverages_comparison, plot_exploration_comparison
+from Plots import plot_coverages_comparison, plot_exploration_comparison
 from scipy.signal import savgol_filter
 
 def smooth_curve(data, window_length=11, polyorder=3):
     """
-    Smooths the data using Savitzky-Golay filter.
+    Smooths the data using the Savitzky-Golay filter.
     """
     if len(data) < window_length:
-        return data  # Not enough data to smooth
+        return data
     return savgol_filter(data, window_length=window_length, polyorder=polyorder).tolist()
 
 
 USE_SMOOTHING = True
 
-# Define types of search
+# Define the types of search algorithms
 types_of_search = ["systematic", "local", "annealing forward", "annealing reverse", "penalty"]
 
-# Prepare containers for loaded data
-coverages = {search_type: [] for search_type in types_of_search}
-exploration_levels = {search_type: [] for search_type in types_of_search}
+# Initialize containers for results
+coverages = {t: [] for t in types_of_search}
+exploration_levels = {t: [] for t in types_of_search}
+times_elapsed = {t: [] for t in types_of_search}
 
-# Determine project root based on the script location
+# Resolve project root
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 print(f"Project root resolved to: {project_root}\n")
 
-# Load data from files
+# Load all data
 for search_type in types_of_search:
-    print(f"Processing {search_type} search:")
-    for j in range(30): # or NUM_SIMULATION
+    print(f"Processing '{search_type}' search:")
+
+    for j in range(30):  # or NUM_OF_SIMULATIONS
         base_path = os.path.join(project_root, f"Experiment results/experiment2/{search_type} search/{j}")
         cov_path = os.path.join(base_path, "coverages.p")
         expl_path = os.path.join(base_path, "exploration_levels.p")
-
-        print(f"  Simulation {j}:")
-        print(f"    Base path: {base_path}")
-        print(f"    Coverage file exists: {os.path.exists(cov_path)}")
-        print(f"    Exploration file exists: {os.path.exists(expl_path)}")
+        time_path = os.path.join(base_path, "time_elapsed.p")
 
         if not os.path.exists(cov_path):
-            raise FileNotFoundError(f"Missing coverage file: {cov_path}")
+            raise FileNotFoundError(f"Missing file: {cov_path}")
         if not os.path.exists(expl_path):
-            raise FileNotFoundError(f"Missing exploration file: {expl_path}")
+            raise FileNotFoundError(f"Missing file: {expl_path}")
+        if not os.path.exists(time_path):
+            raise FileNotFoundError(f"Missing file: {time_path}")
 
-        with open(cov_path, "rb") as f_cov, open(expl_path, "rb") as f_expl:
-            coverage_data = pickle.load(f_cov)
-            exploration_data = pickle.load(f_expl)
-            print(f"    Loaded coverage data length: {len(coverage_data)}")
-            print(f"    Loaded exploration data length: {len(exploration_data)}")
-            coverages[search_type].append(coverage_data)
-            exploration_levels[search_type].append(exploration_data)
+        with open(cov_path, "rb") as f_cov, \
+             open(expl_path, "rb") as f_expl, \
+             open(time_path, "rb") as f_time:
+            coverages[search_type].append(pickle.load(f_cov))
+            exploration_levels[search_type].append(pickle.load(f_expl))
+            times_elapsed[search_type].append(pickle.load(f_time))
 
-    print(f"Total simulations loaded for {search_type} search: {len(coverages[search_type])}\n")
+    print(f"Loaded {len(coverages[search_type])} simulations for '{search_type}' search.\n")
 
-# Initialize average containers
-average_coverages = {search_type: [0] * (NUM_OF_ITERATIONS + 1) for search_type in types_of_search}
-average_explorations = {search_type: [0] * (NUM_OF_ITERATIONS + 1) for search_type in types_of_search}
+# Compute averages
+average_coverages = {t: [0] * (NUM_OF_ITERATIONS + 1) for t in types_of_search}
+average_explorations = {t: [0] * (NUM_OF_ITERATIONS + 1) for t in types_of_search}
 
-# Compute averages across simulations, adapt to actual loaded data length
-for search_type in types_of_search:
-    num_sims = len(coverages[search_type])
-    print(f"Averaging data for {search_type} search with {num_sims} simulations")
-
+for t in types_of_search:
     for k in range(NUM_OF_ITERATIONS + 1):
-        total_cov = 0
-        total_expl = 0
-        count_cov = 0
-        count_expl = 0
+        cov_values = [cov[k] for cov in coverages[t] if len(cov) > k]
+        expl_values = [expl[k] for expl in exploration_levels[t] if len(expl) > k]
+        average_coverages[t][k] = np.mean(cov_values) if cov_values else 0
+        average_explorations[t][k] = np.mean(expl_values) if expl_values else 0
 
-        for j in range(num_sims):
-            cov_len = len(coverages[search_type][j])
-            expl_len = len(exploration_levels[search_type][j])
+print("Averaging complete.\n")
 
-            if k < cov_len:
-                total_cov += coverages[search_type][j][k]
-                count_cov += 1
-            else:
-                print(f"    Warning: coverage index {k} out of range for simulation {j} (length {cov_len})")
+# Final statistics (last iteration only)
+print("===== Final Statistics (Last Iteration) =====")
+for t in types_of_search:
+    final_covs = [cov[-1] for cov in coverages[t] if cov]
+    final_expls = [expl[-1] for expl in exploration_levels[t] if expl]
+    times = times_elapsed[t]
 
-            if k < expl_len:
-                total_expl += exploration_levels[search_type][j][k]
-                count_expl += 1
-            else:
-                print(f"    Warning: exploration index {k} out of range for simulation {j} (length {expl_len})")
+    if final_covs and final_expls and times:
+        cov_mean, cov_min, cov_max, cov_std = np.mean(final_covs), np.min(final_covs), np.max(final_covs), np.std(final_covs)
+        expl_mean, expl_min, expl_max, expl_std = np.mean(final_expls), np.min(final_expls), np.max(final_expls), np.std(final_expls)
+        time_mean = np.mean(times)
 
-        average_coverages[search_type][k] = (total_cov / count_cov) if count_cov > 0 else 0
-        average_explorations[search_type][k] = (total_expl / count_expl) if count_expl > 0 else 0
+        print(f"\n{t.upper()}:")
+        print(f"  Coverage     → mean: {cov_mean:.2f}, min: {cov_min:.2f}, max: {cov_max:.2f}, std: {cov_std:.3f}")
+        print(f"  Exploration  → mean: {expl_mean:.2f}, min: {expl_min:.2f}, max: {expl_max:.2f}, std: {expl_std:.3f}")
+        print(f"  Time Elapsed → average: {time_mean:.2f} seconds")
+    else:
+        print(f"\n{t.upper()}: No data available for statistics.")
 
-print("\nAveraging complete.\n")
-
-
-# Plot results
+# Plotting
 output_path = os.path.join(project_root, "Experiment results/experiment2/")
-print(f"Plotting results to: {output_path}")
+print(f"\nSaving plots to: {output_path}")
 
 if USE_SMOOTHING:
-    smoothed_coverages = {
-        k: smooth_curve(v, window_length=15, polyorder=3) for k, v in average_coverages.items()
-    }
-    smoothed_explorations = {
-        k: smooth_curve(v, window_length=15, polyorder=3) for k, v in average_explorations.items()
-    }
+    smoothed_coverages = {t: smooth_curve(v, window_length=15, polyorder=3) for t, v in average_coverages.items()}
+    smoothed_explorations = {t: smooth_curve(v, window_length=15, polyorder=3) for t, v in average_explorations.items()}
 else:
     smoothed_coverages = average_coverages
     smoothed_explorations = average_explorations
 
 # Plot using smoothed data
 plot_coverages_comparison(
-    smoothed_coverages.values(),
+    list(smoothed_coverages.values()),
     list(smoothed_coverages.keys()),
     path=output_path
 )
 
 plot_exploration_comparison(
-    smoothed_explorations.values(),
+    list(smoothed_explorations.values()),
     list(smoothed_explorations.keys()),
     path=output_path
 )
