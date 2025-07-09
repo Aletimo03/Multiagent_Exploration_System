@@ -11,4 +11,6 @@ platformdirs==4.3.8
 pyparsing==3.2.3
 python-dateutil==2.9.0.post0
 scipy==1.13.1
+snakeviz==2.2.2
+tornado==6.5.1
 zipp==3.23.0

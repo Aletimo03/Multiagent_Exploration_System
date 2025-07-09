@@ -36,17 +36,9 @@ class User:
         if deserialize:
             self.death_time = pickle.load(open("User death times/user" + str(self.id) + ".p", "rb"))
         else:
-            self.death_time = int(random.gauss(NUM_OF_ITERATIONS + 4, 2))
-            pickle.dump((self.death_time), open("User death times/user" + str(self.id) + ".p", "wb"))
-
-
-   # distribuzione geometrica con p piccolo
-       # expected_life = (NUM_OF_ITERATIONS * 0.8)  # e.g., average user lives 80% of the simulation
-      #  p = 1 / (100* expected_life)  # derive p from desired mean
-       # self.death_time = int(np.random.geometric(p))# p or maybe Pd from the model
-
-        # print (self.id, " has death time: ",self.death_time) DEBUG line
-
+            death_delay = np.random.geometric(USER_APPEARANCE_PROBABILITY)  # integer ≥ 1
+            self.death_time = 80 + death_delay # 80 mean life for users
+            pickle.dump(self.death_time, open("User death times/user" + str(self.id) + ".p", "wb"))
 
 
         self.is_covered = None
